@@ -18,17 +18,20 @@ export interface Product {
 export interface OrderItem {
   id: number
   productId: number
-  productName: string
   quantity: number
   price: number
   subtotal: number
+  product?: Product
 }
 
 export interface Order {
   id: number
   orderId: string
-  items: OrderItem[]
+  items?: OrderItem[]
   totalAmount: number
   date: string
-  status: "Success" | "Cancelled"
+}
+
+export interface CartItem extends Product {
+  quantity: number
 }
