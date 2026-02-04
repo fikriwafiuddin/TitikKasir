@@ -1,9 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Trash2, Minus, Plus, ShoppingCart, Receipt } from "lucide-react"
+import { Trash2, Minus, Plus, ShoppingCart, Receipt, X } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { SheetClose } from "@/components/ui/sheet"
 
 interface CartItem {
   id: number
@@ -29,68 +30,94 @@ export function Cart({
     (sum, item) => sum + item.price * item.quantity,
     0,
   )
-  const tax = subtotal * 0.1 // Example 10% tax
+  const tax = subtotal * 0.1 // 10% tax
   const total = subtotal + tax
 
   return (
-    <div className="flex flex-col h-full bg-card border rounded-lg overflow-hidden">
-      <div className="p-4 border-b flex items-center justify-between bg-primary/5">
-        <div className="flex items-center gap-2 font-bold">
-          <ShoppingCart size={20} className="text-primary" />
-          <span>Current Order</span>
+    <div className="flex flex-col h-full bg-background relative overflow-hidden">
+      <div className="p-6 border-b flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <ShoppingCart size={22} />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg leading-none">Your Cart</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              {items.length} items added
+            </p>
+          </div>
         </div>
-        <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full">
-          {items.length} items
-        </span>
+        <SheetClose asChild>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <X size={20} />
+          </Button>
+        </SheetClose>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 px-6">
         {items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[200px] text-muted-foreground">
-            <ShoppingCart size={40} className="mb-2 opacity-20" />
-            <p>Your cart is empty</p>
+          <div className="flex flex-col items-center justify-center h-[400px] text-muted-foreground text-center">
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6 opacity-20">
+              <ShoppingCart size={40} />
+            </div>
+            <h4 className="font-bold text-slate-900 text-lg">
+              Your cart is empty
+            </h4>
+            <p className="text-sm max-w-[200px] mx-auto mt-2">
+              Looks like you haven&apos;t added anything to your cart yet.
+            </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="py-6 space-y-6">
             {items.map((item) => (
-              <div key={item.id} className="flex flex-col gap-2">
-                <div className="flex justify-between items-start">
-                  <span className="font-medium text-sm line-clamp-2">
-                    {item.name}
+              <div
+                key={item.id}
+                className="group relative flex gap-4 items-start"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0 group-hover:bg-primary/5 transition-colors">
+                  <span className="text-xs font-bold text-muted-foreground group-hover:text-primary transition-colors">
+                    {item.name.substring(0, 2).toUpperCase()}
                   </span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    onClick={() => onRemoveItem(item.id)}
-                  >
-                    <Trash2 size={14} />
-                  </Button>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Rp {item.price.toLocaleString("id-ID")}
-                  </span>
-                  <div className="flex items-center gap-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-bold text-sm leading-tight line-clamp-2 pr-2">
+                      {item.name}
+                    </h4>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="icon"
-                      className="h-8 w-8"
-                      onClick={() => onUpdateQuantity(item.id, -1)}
+                      className="h-8 w-8 -mt-1 -mr-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
+                      onClick={() => onRemoveItem(item.id)}
                     >
-                      <Minus size={14} />
+                      <Trash2 size={14} />
                     </Button>
-                    <span className="text-sm font-semibold w-6 text-center">
-                      {item.quantity}
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="font-bold text-primary">
+                      Rp {item.price.toLocaleString("id-ID")}
                     </span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => onUpdateQuantity(item.id, 1)}
-                    >
-                      <Plus size={14} />
-                    </Button>
+                    <div className="flex items-center bg-muted/50 rounded-lg p-0.5 border">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 rounded-md hover:bg-white"
+                        onClick={() => onUpdateQuantity(item.id, -1)}
+                      >
+                        <Minus size={12} />
+                      </Button>
+                      <span className="text-sm font-bold w-7 text-center">
+                        {item.quantity}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 rounded-md hover:bg-white"
+                        onClick={() => onUpdateQuantity(item.id, 1)}
+                      >
+                        <Plus size={12} />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -99,30 +126,47 @@ export function Cart({
         )}
       </ScrollArea>
 
-      <div className="p-4 bg-muted/30 border-t space-y-3">
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Subtotal</span>
-          <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+      <div className="p-6 bg-card border-t border-border/50 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+        <div className="space-y-3 mb-6">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Subtotal</span>
+            <span className="font-medium">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Platform Fee (10%)</span>
+            <span className="font-medium">
+              Rp {tax.toLocaleString("id-ID")}
+            </span>
+          </div>
+          <Separator />
+          <div className="flex justify-between items-end pt-2">
+            <div className="flex flex-col">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
+                Total Amount
+              </span>
+              <span className="text-2xl font-black text-primary leading-none">
+                Rp {total.toLocaleString("id-ID")}
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Tax (10%)</span>
-          <span>Rp {tax.toLocaleString("id-ID")}</span>
-        </div>
-        <Separator />
-        <div className="flex justify-between font-bold text-lg">
-          <span>Total</span>
-          <span className="text-primary">
-            Rp {total.toLocaleString("id-ID")}
-          </span>
-        </div>
-        <Button
-          className="w-full h-12 text-lg gap-2 cursor-pointer"
-          disabled={items.length === 0}
-          onClick={onCheckout}
-        >
-          <Receipt size={20} />
-          Checkout
-        </Button>
+        <SheetClose asChild>
+          <Button
+            className="w-full h-14 text-lg font-bold rounded-2xl gap-3 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all"
+            disabled={items.length === 0}
+            onClick={onCheckout}
+          >
+            <div className="p-1 px-2.5 bg-white/20 rounded-lg">
+              <Receipt size={18} />
+            </div>
+            Process Order
+          </Button>
+        </SheetClose>
+        <p className="text-center text-[10px] text-muted-foreground mt-4 italic">
+          By clicking Process Order, you agree to our Terms of Service.
+        </p>
       </div>
     </div>
   )

@@ -1,65 +1,249 @@
-import Image from "next/image";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import {
+  ArrowRight,
+  Store,
+  BarChart3,
+  Zap,
+  ShieldCheck,
+  LayoutDashboard,
+  Smartphone,
+} from "lucide-react"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Navigation */}
+      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-xl">
+                T
+              </span>
+            </div>
+            <span className="text-xl font-bold tracking-tight">TitikKasir</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <Link
+              href="#features"
+              className="hover:text-primary transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Features
+            </Link>
+            <Link
+              href="#about"
+              className="hover:text-primary transition-colors"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              About
+            </Link>
+          </nav>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" asChild>
+              <Link href="/auth/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/auth/register">Get Started</Link>
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      <main className="flex-1 pt-16">
+        {/* Hero Section */}
+        <section className="py-20 lg:py-32 overflow-hidden bg-linear-to-b from-primary/5 to-background">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-8 max-w-2xl">
+                <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/10 text-primary border border-primary/20">
+                  <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse" />
+                  New: Dashboard Analytics 2.0
+                </div>
+                <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
+                  Kelola Bisnis Jadi Lebih{" "}
+                  <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-indigo-600">
+                    Mudah & Cepat
+                  </span>
+                </h1>
+                <p className="text-xl text-muted-foreground leading-relaxed">
+                  Solusi kasir pintar untuk segala jenis usaha. Dari manajemen
+                  stok hingga laporan keuangan, semua dalam satu genggaman.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button size="lg" className="h-14 px-8 text-lg gap-2" asChild>
+                    <Link href="/auth/register">
+                      Mulai Sekarang <ArrowRight size={20} />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-14 px-8 text-lg"
+                    asChild
+                  >
+                    <Link href="#features">Lihat Fitur</Link>
+                  </Button>
+                </div>
+                <div className="flex items-center gap-6 pt-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck size={18} className="text-primary" />
+                    Secure SSL
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap size={18} className="text-primary" />
+                    Fast Processing
+                  </div>
+                </div>
+              </div>
+              <div className="relative flex justify-center lg:justify-end">
+                <div className="relative w-full max-w-[500px] aspect-square rounded-3xl bg-primary/10 overflow-hidden border shadow-2xl">
+                  {/* Placeholder for Hero Image - In a real app we'd use a real dashboard screenshot */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <LayoutDashboard size={200} className="text-primary/20" />
+                  </div>
+                  <div className="absolute bottom-10 left-10 right-10 bg-background/90 backdrop-blur-sm p-6 rounded-2xl border shadow-lg animate-in fade-in slide-in-from-bottom-5 duration-700">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="text-sm font-semibold">
+                        Today&apos;s Sales
+                      </div>
+                      <div className="text-emerald-500 font-bold bg-emerald-50 px-2 py-0.5 rounded text-xs">
+                        +24%
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold">Rp 4.250.000</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-24 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                Semua yang Anda Butuhkan untuk Sukses
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                TitikKasir dirancang dengan fokus pada kecepatan dan kemudahan
+                penggunaan.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: <Zap className="text-primary" />,
+                  title: "Point of Sale (POS)",
+                  desc: "Transaksi cepat dengan antarmuka yang intuitif dan responsif.",
+                },
+                {
+                  icon: <Store className="text-primary" />,
+                  title: "Manajemen Stok",
+                  desc: "Pantau inventaris Anda secara real-time dan dapatkan notifikasi stok rendah.",
+                },
+                {
+                  icon: <BarChart3 className="text-primary" />,
+                  title: "Laporan Lengkap",
+                  desc: "Analisis penjualan harian, mingguan, hingga bulanan dengan grafik interaktif.",
+                },
+                {
+                  icon: <LayoutDashboard className="text-primary" />,
+                  title: "Multi-User",
+                  desc: "Kelola tim Anda dengan hak akses yang berbeda-beda untuk setiap peran.",
+                },
+                {
+                  icon: <Smartphone className="text-primary" />,
+                  title: "Hybrid Apps",
+                  desc: "Akses dari perangkat apa saja, baik smartphone, tablet, maupun desktop.",
+                },
+                {
+                  icon: <ShieldCheck className="text-primary" />,
+                  title: "Cloud Backup",
+                  desc: "Semua data tersimpan aman di cloud dan dapat diakses kapan saja.",
+                },
+              ].map((feature, i) => (
+                <div
+                  key={i}
+                  className="p-8 rounded-2xl border bg-card hover:shadow-lg transition-shadow border-primary/10 group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-24">
+          <div className="container mx-auto px-4">
+            <div className="bg-primary rounded-[3rem] p-12 lg:p-20 text-center text-primary-foreground relative overflow-hidden">
+              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
+
+              <div className="relative z-10 space-y-8">
+                <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight">
+                  Siap untuk Menumbuhkan Bisnis Anda?
+                </h2>
+                <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
+                  Bergabunglah dengan ribuan pengusaha yang telah mempercayakan
+                  operasional bisnis mereka kepada TitikKasir.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="h-14 px-10 text-lg"
+                    asChild
+                  >
+                    <Link href="/auth/register">Daftar Sekarang</Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-14 px-10 text-lg bg-transparent border-primary-foreground/20 hover:bg-white/10 text-primary-foreground"
+                    asChild
+                  >
+                    <Link href="/auth/login">Hubungi Sales</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
+
+      <footer className="py-12 border-t">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-xs">
+                  T
+                </span>
+              </div>
+              <span className="font-bold tracking-tight">TitikKasir</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              © 2026 TitikKasir. All rights reserved.
+            </p>
+            <div className="flex gap-6 text-sm font-medium text-muted-foreground">
+              <Link href="#" className="hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="#" className="hover:text-primary transition-colors">
+                Terms of Service
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
