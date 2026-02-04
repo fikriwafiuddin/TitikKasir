@@ -1,5 +1,6 @@
-import { Navbar } from "@/components/Navbar"
-import { Sidebar } from "@/components/Sidebar"
+import { AppHeader } from "@/components/layout/AppHeader"
+import { AppSidebar } from "@/components/layout/AppSidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 export default function ProtectedLayout({
   children,
@@ -8,13 +9,15 @@ export default function ProtectedLayout({
 }) {
   return (
     <>
-      <div className="flex h-screen overflow-hidden bg-background">
-        <Sidebar />
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <Navbar />
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
-        </div>
-      </div>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset className="overflow-hidden">
+          <main className="flex-1">
+            <AppHeader />
+            <div className="p-6 space-y-6">{children}</div>
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
     </>
   )
 }
