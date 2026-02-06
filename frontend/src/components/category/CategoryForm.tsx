@@ -1,69 +1,62 @@
 "use client"
 
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  categorySchema,
-  CategoryFormValues,
-} from "@/validations/categoryValidation"
+import categoryValidation from "@/validations/categoryValidation"
 import { Button } from "@/components/ui/button"
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Category } from "@/types"
+import { FormCreateCategory } from "@/types/form"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 
 interface CategoryFormProps {
-  initialData?: any
-  onSubmit: (data: CategoryFormValues) => void
-  title: string
+  category?: Category
+  onSuccess?: () => void
 }
 
-export function CategoryForm({
-  initialData,
-  onSubmit,
-  title,
-}: CategoryFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema) as any,
-    defaultValues: initialData || {
-      name: "",
+export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
+  const form = useForm({
+    resolver: zodResolver(categoryValidation.create),
+    defaultValues: {
+      name: category?.name || "",
     },
   })
 
+  const onSubmit = (data: FormCreateCategory) => {
+    console.log(data)
+    onSuccess?.()
+  }
+
   return (
-    <DialogContent className="sm:max-w-[400px] rounded-2xl">
-      <form onSubmit={handleSubmit(onSubmit as any)}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+    <div className="border rounded-xl p-6">
+      <form id="form-category" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid gap-4 py-6">
-          <div className="space-y-2">
-            <Label htmlFor="name">Category Name</Label>
-            <Input
-              id="name"
-              {...register("name")}
-              className="rounded-xl h-10"
-              placeholder="e.g. Minuman"
+          <FieldGroup>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Nama Kategori</FieldLabel>
+                  <Input
+                    id="name"
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    className="rounded-xl h-10"
+                    placeholder="e.g. Minuman"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
             />
-            {errors.name && (
-              <p className="text-xs text-destructive">{errors.name.message}</p>
-            )}
-          </div>
+          </FieldGroup>
         </div>
-        <DialogFooter>
-          <Button type="submit" className="w-full rounded-xl h-11">
-            Save Category
-          </Button>
-        </DialogFooter>
+        <Button type="submit" className="w-full rounded-xl h-11">
+          Simpan Kategori
+        </Button>
       </form>
-    </DialogContent>
+    </div>
   )
 }

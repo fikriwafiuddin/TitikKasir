@@ -1,13 +1,20 @@
 import { z } from "zod"
 
-export const categorySchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+const create = z.object({
+  name: z
+    .string({
+      error: (issue) =>
+        issue.input == undefined
+          ? "Nama harus diisi"
+          : "Nama harus berupa string",
+    })
+    .trim()
+    .min(3, "Nama harus minimal 3 karakter")
+    .max(50, "Nama maksimal 50 karakter"),
 })
 
-export type CategoryFormValues = z.infer<typeof categorySchema>
-
 const categoryValidation = {
-  add: categorySchema,
+  create,
 }
 
 export default categoryValidation
