@@ -12,3 +12,32 @@ export function formatCurrency(amount: number) {
     minimumFractionDigits: 0,
   }).format(amount)
 }
+
+export function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
+export function formatDateTime(dateString: string) {
+  return new Date(dateString).toLocaleString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
+export function translateStatus(status: string) {
+  switch (status) {
+    case "success":
+      return "Berhasil"
+    case "cancelled":
+      return "Dibatalkan"
+    default:
+      return status
+  }
+}

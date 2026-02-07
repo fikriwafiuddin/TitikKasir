@@ -1,28 +1,33 @@
 "use client"
 
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import Receipt from "./Receipt"
-import { Order, OrderItem } from "@/types"
+import { OrderWithItems } from "@/types"
 
 type ReceiptDialogProps = {
-  order: Order
-  orderItems: OrderItem[]
+  orderWithItems: OrderWithItems
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
 function ReceiptDialog({
-  order,
-  orderItems,
+  orderWithItems,
   open,
   onOpenChange,
 }: ReceiptDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
+        <DialogHeader className="hidden">
+          <DialogTitle>Struk Transaksi</DialogTitle>
+        </DialogHeader>
         <Receipt
-          order={order}
-          orderItems={orderItems}
+          orderWithItems={orderWithItems}
           onClose={() => onOpenChange(false)}
         />
       </DialogContent>

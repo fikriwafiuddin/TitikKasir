@@ -1,15 +1,14 @@
-import { Order, OrderItem } from "@/types"
+import { OrderWithItems } from "@/types"
 import { CheckCircle2Icon, PrinterIcon, XIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { Button } from "../ui/button"
 
 type ReceiptProps = {
-  order: Order
-  orderItems: OrderItem[]
+  orderWithItems: OrderWithItems
   onClose?: () => void
 }
 
-function Receipt({ order, orderItems, onClose }: ReceiptProps) {
+function Receipt({ orderWithItems, onClose }: ReceiptProps) {
   return (
     <div className="max-h-[80vh] overflow-y-auto bg-white text-slate-800 p-8 font-mono text-sm relative">
       <div className="absolute top-4 right-4 text-emerald-500 animate-in fade-in zoom-in duration-500">
@@ -28,16 +27,16 @@ function Receipt({ order, orderItems, onClose }: ReceiptProps) {
       <div className="space-y-1 mb-6 border-y border-dashed py-4 border-slate-200">
         <div className="flex justify-between">
           <span>Order ID:</span>
-          <span className="font-bold">{order.orderId}</span>
+          <span className="font-bold">{orderWithItems.orderId}</span>
         </div>
         <div className="flex justify-between">
           <span>Tanggal:</span>
-          <span>{order.date}</span>
+          <span>{orderWithItems.date}</span>
         </div>
       </div>
 
       <div className="space-y-3 mb-6">
-        {orderItems.map((item, i) => (
+        {orderWithItems.items.map((item, i) => (
           <div key={i} className="space-y-1">
             <div className="flex justify-between text-slate-900 font-bold">
               <span>{item.product?.name}</span>
@@ -60,7 +59,7 @@ function Receipt({ order, orderItems, onClose }: ReceiptProps) {
         <div className="flex justify-between text-lg font-bold">
           <span>TOTAL</span>
           <span className="text-primary text-xl">
-            Rp {order.totalAmount.toLocaleString("id-ID")}
+            Rp {orderWithItems.totalAmount.toLocaleString("id-ID")}
           </span>
         </div>
       </div>
