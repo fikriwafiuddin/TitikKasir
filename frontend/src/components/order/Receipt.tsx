@@ -3,12 +3,16 @@ import { CheckCircle2Icon, PrinterIcon, XIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { Button } from "../ui/button"
 
+import useSettingsStore from "@/store/useSettings"
+
 type ReceiptProps = {
   orderWithItems: OrderWithItems
   onClose?: () => void
 }
 
 function Receipt({ orderWithItems, onClose }: ReceiptProps) {
+  const { storeName } = useSettingsStore()
+
   return (
     <div className="max-h-[80vh] overflow-y-auto bg-white text-slate-800 p-8 font-mono text-sm relative">
       <div className="absolute top-4 right-4 text-emerald-500 animate-in fade-in zoom-in duration-500">
@@ -16,9 +20,13 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
       </div>
       <div className="text-center space-y-2 mb-8">
         <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-2">
-          <span className="text-white font-bold text-2xl">T</span>
+          <span className="text-white font-bold text-2xl">
+            {storeName.charAt(0).toUpperCase()}
+          </span>
         </div>
-        <h2 className="text-xl font-bold tracking-tighter">TITIK KASIR</h2>
+        <h2 className="text-xl font-bold tracking-tighter uppercase">
+          {storeName}
+        </h2>
         <p className="text-xs text-muted-foreground uppercase tracking-widest">
           Transaksi Berhasil
         </p>
@@ -70,7 +78,7 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
             Transaksi Selesai
           </p>
           <p className="text-[10px] text-muted-foreground italic">
-            Terima kasih telah berbelanja di Titik Kasir!
+            Terima kasih telah berbelanja di {storeName}!
           </p>
         </div>
         <div className="flex gap-2">
