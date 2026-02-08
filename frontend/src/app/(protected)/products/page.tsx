@@ -115,32 +115,30 @@ export default function ProductsPage() {
       </div>
 
       <div className="flex gap-4 flex-col">
-        <div className="flex flex-1 gap-2">
-          <div className="relative w-full">
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Cari produk..."
-              className="pl-10 h-11 bg-card rounded-xl border-border/50"
+              placeholder="Cari nama kategori..."
+              className="pl-9 h-11 bg-card rounded-xl border-border/50"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="category">Kategori:</Label>
-          <Select>
-            <SelectTrigger className="min-w-64">
-              <SelectValue placeholder="Pilih Kategori" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.name}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+
+        <Select>
+          <SelectTrigger className="min-w-64">
+            <SelectValue placeholder="Pilih Kategori" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.name}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <DataTable columns={columns} data={filteredProducts} />

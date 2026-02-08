@@ -19,11 +19,6 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
         <CheckCircle2Icon size={48} strokeWidth={1} />
       </div>
       <div className="text-center space-y-2 mb-8">
-        <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-2">
-          <span className="text-white font-bold text-2xl">
-            {storeName.charAt(0).toUpperCase()}
-          </span>
-        </div>
         <h2 className="text-xl font-bold tracking-tighter uppercase">
           {storeName}
         </h2>
@@ -47,7 +42,7 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
         {orderWithItems.items.map((item, i) => (
           <div key={i} className="space-y-1">
             <div className="flex justify-between text-slate-900 font-bold">
-              <span>{item.product?.name}</span>
+              <span>{item.productName}</span>
               <span>
                 Rp {(item.quantity * item.price).toLocaleString("id-ID")}
               </span>

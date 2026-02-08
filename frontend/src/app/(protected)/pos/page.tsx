@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, ChangeEvent } from "react"
+import { useState } from "react"
 import { ProductCard } from "@/components/pos/ProductCard"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
@@ -12,9 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
 import EmptyProducts from "./_components/EmptyProducts"
-import { Order, Product } from "@/types"
+import { Category, OrderWithItems, Product } from "@/types"
 import CartSheet from "@/components/cart/CartSheet"
 import ReceiptDialog from "@/components/order/ReceiptDialog"
 import useCartStore from "@/store/useCart"
@@ -84,12 +83,21 @@ const DUMMY_PRODUCTS: Product[] = [
   },
 ]
 
-const CATEGORIES = ["All", "Coffee", "Food", "Non-Coffee"]
+const categories: Category[] = [
+  {
+    id: 1,
+    name: "Makanan",
+  },
+  {
+    id: 2,
+    name: "Minuman",
+  },
+]
 
 export default function POSPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isReceiptOpen, setIsReceiptOpen] = useState(false)
-  const [lastOrder, setLastOrder] = useState<Order | null>(null)
+  const [lastOrder, setLastOrder] = useState<OrderWithItems | null>(null)
   const items = useCartStore((state) => state.items)
   const clearCart = useCartStore((state) => state.clearCart)
 
@@ -113,10 +121,12 @@ export default function POSPage() {
       items: items.map((item) => ({
         id: item.id,
         productId: item.id,
+        productName: item.name,
         quantity: item.quantity,
         price: item.price,
         subtotal: item.price * item.quantity,
       })),
+      status: "success",
       totalAmount: total,
       date: new Date().toLocaleString("id-ID"),
     })
@@ -137,35 +147,31 @@ export default function POSPage() {
             </p>
           </div>
 
-          <div className="flex gap-4 flex-col justify-between">
-            <div className="flex flex-1 gap-2">
-              <div className="relative w-full">
+          <div className="flex gap-4 flex-col">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Cari produk..."
-                  className="pl-10 h-11 bg-card rounded-xl border-border/50"
+                  placeholder="Cari nama kategori..."
+                  className="pl-9 h-11 bg-card rounded-xl border-border/50"
                   value={searchQuery}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setSearchQuery(e.target.value)
-                  }
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Kategori:</Label>
-              <Select>
-                <SelectTrigger className="min-w-64">
-                  <SelectValue placeholder="Pilih Kategori" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+
+            <Select>
+              <SelectTrigger className="min-w-64">
+                <SelectValue placeholder="Pilih Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.name}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -186,8 +192,7 @@ export default function POSPage() {
         <ReceiptDialog
           open={isReceiptOpen}
           onOpenChange={setIsReceiptOpen}
-          order={lastOrder}
-          orderItems={lastOrder?.items || []}
+          orderWithItems={lastOrder}
         />
       )}
     </div>
