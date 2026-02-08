@@ -27,18 +27,25 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu"
 
 const sidebarItems = [
   { name: "POS", href: "/pos", icon: ShoppingCartIcon },
   { name: "Produk", href: "/products", icon: PackageIcon },
   { name: "Kategori", href: "/categories", icon: TagsIcon },
-  { name: "Transaksi", href: "/orders", icon: HistoryIcon },
+  { name: "Pesanan", href: "/orders", icon: HistoryIcon },
   { name: "Laporan", href: "/reports", icon: BarChart3Icon },
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, state } = useSidebar()
 
   return (
     <Sidebar variant="inset" {...props} collapsible="icon">
@@ -65,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   tooltip={item.name}
-                  isActive={pathname === item.href}
+                  isActive={pathname.includes(item.href)}
                   className="text-muted-foreground hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:shadow-md data-[active=true]:shadow-primary/20"
                   onClick={() => {
                     if (isMobile) setOpenMobile(false)
@@ -84,7 +91,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Konfigurasi</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild size="sm">
+              <SidebarMenuButton
+                isActive={pathname === "/settings"}
+                className="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:shadow-md data-[active=true]:shadow-primary/20"
+                asChild
+                size="sm"
+              >
                 <Link href="/settings">
                   <SettingsIcon />
                   <span>Pengaturan</span>
@@ -94,22 +106,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border/50 p-4">
+      <SidebarFooter className="border-t border-sidebar-border/50">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <UserIcon className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">John Doe</span>
-                <span className="truncate text-xs">Administrator</span>
-              </div>
-              <LogOut className="ml-auto size-4" />
-            </SidebarMenuButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <div className="flex p-2 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <UserIcon className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight truncate">
+                    <span className="truncate font-semibold">John Doe</span>
+                    <span className="truncate text-xs">
+                      jhondoe@example.com
+                    </span>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side={
+                  isMobile
+                    ? "bottom"
+                    : state === "collapsed"
+                      ? "left"
+                      : "bottom"
+                }
+              >
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <LogOut /> Keluar
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

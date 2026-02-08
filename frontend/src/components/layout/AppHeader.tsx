@@ -31,18 +31,6 @@ export function AppHeader() {
           <BellIcon size={20} className="text-muted-foreground" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-card" />
         </Button>
-        <div className="h-8 w-px bg-border mx-2" />
-        <Button
-          variant="ghost"
-          className="rounded-xl gap-3 px-2 hover:bg-accent h-10"
-        >
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-            JD
-          </div>
-          <span className="text-sm font-medium hidden sm:inline-block">
-            John Doe
-          </span>
-        </Button>
       </div>
     </header>
   )
