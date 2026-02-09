@@ -1,0 +1,21 @@
+import errorMiddleware from "@/middlewares/errorMiddleware.js"
+import { ErrorResponse, SuccessResponse } from "@/utils/response.js"
+import express from "express"
+
+const router = express.Router()
+
+router.get("/health", (req, res) => {
+  res.status(200).json("ok")
+})
+
+router.get("/", (req, res) => {
+  res.json(new SuccessResponse("TitikKasir Backend is running"))
+})
+
+router.all(/.*/, (req, res) => {
+  res.status(404).json(new ErrorResponse("Not Found", 404))
+})
+
+router.use(errorMiddleware)
+
+export default router
