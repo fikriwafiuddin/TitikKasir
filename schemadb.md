@@ -2,6 +2,9 @@ table categories {
 user_id int
 id int [increment]
 name varchar(25)
+total_items int [default: 0]
+sku_prefix varchar(5)
+latest_sku varchar(10)
 }
 
 table products {
@@ -17,7 +20,7 @@ image varchar
 
 table orders {
 id int [increment]
-order_id int
+order_id varchar(10)
 user_id varchar
 total_amount int
 date datetime
@@ -28,9 +31,17 @@ id int [increment]
 user_id varchar
 product_id int
 order_id varchar(10)
+product_name varchar(25)
 unit_price int
 sub_total int
 quantity int
+}
+
+table user {
+id int [increment]
+user_id varchar
+shop_name varchar(25)
+latest_order_id varchar(10)
 }
 
 Ref: "categories"."id" < "products"."category_id"
