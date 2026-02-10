@@ -2,8 +2,6 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -13,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { BarChart3, LayoutDashboard } from "lucide-react"
+
+import { RegisterForm } from "@/components/auth/RegisterForm"
 
 export default function RegisterPage() {
   return (
@@ -44,37 +44,8 @@ export default function RegisterPage() {
                 Mulai kelola bisnis Anda lebih profesional hari ini.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 p-0">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="first-name">Nama Depan</Label>
-                  <Input id="first-name" placeholder="John" className="h-12" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="last-name">Nama Belakang</Label>
-                  <Input id="last-name" placeholder="Doe" className="h-12" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  className="h-12"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" className="h-12" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Konfirmasi Password</Label>
-                <Input id="confirm-password" type="password" className="h-12" />
-              </div>
-              <Button className="w-full h-12 text-lg font-semibold" asChild>
-                <Link href="/login">Daftar Akun</Link>
-              </Button>
+            <CardContent className="p-0">
+              <RegisterForm />
             </CardContent>
             <CardFooter className="flex flex-col space-y-6 p-0 pt-8">
               <div className="relative w-full">

@@ -2,8 +2,6 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -13,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Store, Zap } from "lucide-react"
+
+import { LoginForm } from "@/components/auth/LoginForm"
 
 export default function LoginPage() {
   return (
@@ -40,31 +40,8 @@ export default function LoginPage() {
                 Masukkan email dan password Anda untuk masuk
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 p-0">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  className="h-12"
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    className="text-sm font-medium text-primary hover:underline"
-                  >
-                    Lupa password?
-                  </Link>
-                </div>
-                <Input id="password" type="password" className="h-12" />
-              </div>
-              <Button className="w-full h-12 text-lg font-semibold" asChild>
-                <Link href="/pos">Masuk</Link>
-              </Button>
+            <CardContent className="p-0">
+              <LoginForm />
             </CardContent>
             <CardFooter className="flex flex-col space-y-6 p-0 pt-8">
               <div className="relative w-full">

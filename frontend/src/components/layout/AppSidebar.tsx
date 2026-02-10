@@ -43,9 +43,17 @@ const sidebarItems = [
   { name: "Laporan", href: "/reports", icon: BarChart3Icon },
 ]
 
+import { useUser, useLogout } from "@/services/hooks/useAuth"
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const { isMobile, setOpenMobile, state } = useSidebar()
+  const { data: user } = useUser()
+  const { mutate: logout } = useLogout()
+
+  const displayName = user?.user_metadata?.first_name
+    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim()
+    : "Pengguna"
 
   return (
     <Sidebar variant="inset" {...props} collapsible="icon">
@@ -119,9 +127,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <UserIcon className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight truncate">
-                    <span className="truncate font-semibold">John Doe</span>
+                    <span className="truncate font-semibold">
+                      {displayName}
+                    </span>
                     <span className="truncate text-xs">
-                      jhondoe@example.com
+                      {user?.email || "Memuat..."}
                     </span>
                   </div>
                 </SidebarMenuButton>
@@ -134,10 +144,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       ? "left"
                       : "bottom"
                 }
+                className="w-56 rounded-xl"
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <LogOut /> Keluar
+                  <DropdownMenuItem onClick={() => logout()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Keluar</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
