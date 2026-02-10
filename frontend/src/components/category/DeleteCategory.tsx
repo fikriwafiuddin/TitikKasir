@@ -18,12 +18,17 @@ type DeleteCategoryProps = {
   id: number
 }
 
+import { useDeleteCategory } from "@/services/hooks/useCategory"
+import { Spinner } from "../ui/spinner"
+
 function DeleteCategory({ id }: DeleteCategoryProps) {
   const [open, setOpen] = useState(false)
+  const { mutate: deleteCategory, isPending } = useDeleteCategory()
 
-  const deleteCategory = () => {
-    setOpen(false)
-    console.log(id)
+  const handleDelete = () => {
+    deleteCategory(id, {
+      onSuccess: () => setOpen(false),
+    })
   }
 
   return (
@@ -47,9 +52,13 @@ function DeleteCategory({ id }: DeleteCategoryProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Batal</AlertDialogCancel>
-          <Button variant="destructive" onClick={deleteCategory}>
-            Hapus
+          <AlertDialogCancel disabled={isPending}>Batal</AlertDialogCancel>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            {isPending ? <Spinner /> : "Hapus"}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

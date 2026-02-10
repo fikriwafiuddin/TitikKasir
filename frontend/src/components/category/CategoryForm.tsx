@@ -14,7 +14,16 @@ interface CategoryFormProps {
   onSuccess?: () => void
 }
 
+import {
+  useCreateCategory,
+  useUpdateCategory,
+} from "@/services/hooks/useCategory"
+import { Spinner } from "../ui/spinner"
+
 export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
+  const { mutate: createCategory, isPending: isCreating } = useCreateCategory()
+  const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory()
+
   const form = useForm({
     resolver: zodResolver(categoryValidation.create),
     defaultValues: {
@@ -23,9 +32,21 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
   })
 
   const onSubmit = (data: FormCreateCategory) => {
-    console.log(data)
-    onSuccess?.()
+    if (category?.id) {
+      updateCategory(
+        { id: category.id, data },
+        {
+          onSuccess: () => onSuccess?.(),
+        },
+      )
+    } else {
+      createCategory(data, {
+        onSuccess: () => onSuccess?.(),
+      })
+    }
   }
+
+  const isPending = isCreating || isUpdating
 
   return (
     <div className="border rounded-xl p-6">
@@ -53,8 +74,12 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
             />
           </FieldGroup>
         </div>
-        <Button type="submit" className="w-full rounded-xl h-11">
-          Simpan Kategori
+        <Button
+          type="submit"
+          className="w-full rounded-xl h-11"
+          disabled={isPending}
+        >
+          {isPending ? <Spinner /> : "Simpan Kategori"}
         </Button>
       </form>
     </div>
