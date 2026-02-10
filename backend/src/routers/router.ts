@@ -1,8 +1,11 @@
 import errorMiddleware from "@/middlewares/errorMiddleware.js"
 import { ErrorResponse, SuccessResponse } from "@/utils/response.js"
 import express from "express"
+import categoryRouter from "./categoryRouter.js"
 
 const router = express.Router()
+
+router.use("/categories", categoryRouter)
 
 router.get("/health", (req, res) => {
   res.status(200).json("ok")
