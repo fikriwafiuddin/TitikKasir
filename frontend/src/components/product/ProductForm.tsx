@@ -16,15 +16,16 @@ import {
 import { Product } from "@/types"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { FileUpload } from "../FileUploade"
+import { useCategories } from "@/services/hooks/useCategory"
+import { useCreateProduct, useUpdateProduct } from "@/services/hooks/useProduct"
 import { FormCreateProduct, FormUpdateProduct } from "@/types/form"
+import { Spinner } from "../ui/spinner"
 
 interface ProductFormProps {
   product?: Product
   onSuccess?: () => void
   mode?: "create" | "edit"
 }
-
-const CATEGORIES = ["Minuman", "Makanan", "Snack", "Peralatan"]
 
 export function ProductForm({
   product,
@@ -35,6 +36,12 @@ export function ProductForm({
     product?.image || null,
   )
 
+  const { data: categoriesData } = useCategories({ limit: 100 })
+  const categories = categoriesData?.data?.categories || []
+
+  const createMutation = useCreateProduct()
+  const updateMutation = useUpdateProduct(product?.id || 0)
+
   const form = useForm({
     resolver: zodResolver(
       mode === "create" ? productValidation.create : productValidation.update,
@@ -43,15 +50,34 @@ export function ProductForm({
       name: product?.name || "",
       price: product?.price || 0,
       stock: product?.stock || 0,
-      category: product?.category || "",
+      category_id: product?.category_id || undefined,
       image: undefined,
     },
   })
 
-  const onSubmit = (data: FormCreateProduct | FormUpdateProduct) => {
-    console.log(data)
-    onSuccess?.()
+  const onSubmit = async (data: FormCreateProduct | FormUpdateProduct) => {
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("price", data.price.toString())
+    formData.append("stock", data.stock.toString())
+    formData.append("category_id", data.category_id.toString())
+
+    if (data.image) {
+      formData.append("image", data.image)
+    }
+
+    if (mode === "create") {
+      createMutation.mutate(formData, {
+        onSuccess: () => onSuccess?.(),
+      })
+    } else {
+      updateMutation.mutate(formData, {
+        onSuccess: () => onSuccess?.(),
+      })
+    }
   }
+
+  const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
     <div className="border rounded-xl p-6">
@@ -71,7 +97,7 @@ export function ProductForm({
                     }}
                     previewUrl={previewUrl}
                     acceptedFileTypes="image/png, image/jpeg, image/webp"
-                    fileRestrictionsText="PNG, JPEG, atau WEBP. Maks 5MB"
+                    fileRestrictionsText="PNG, JPEG, atau WEBP. Maks 2MB"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -105,23 +131,26 @@ export function ProductForm({
 
           <FieldGroup>
             <Controller
-              name="category"
+              name="category_id"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="category">Kategori</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <FieldLabel htmlFor="category_id">Kategori</FieldLabel>
+                  <Select
+                    onValueChange={(val) => field.onChange(parseInt(val))}
+                    value={field.value?.toString()}
+                  >
                     <SelectTrigger
-                      id="category"
+                      id="category_id"
                       aria-invalid={fieldState.invalid}
                       className="w-full rounded-xl h-10"
                     >
                       <SelectValue placeholder="Pilih kategori" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CATEGORIES.map((cat) => (
-                        <SelectItem key={cat} value={cat}>
-                          {cat}
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id.toString()}>
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -191,8 +220,12 @@ export function ProductForm({
           </div>
         </div>
 
-        <Button type="submit" className="w-full rounded-xl h-11">
-          Simpan Produk
+        <Button
+          type="submit"
+          className="w-full rounded-xl h-11"
+          disabled={isPending}
+        >
+          {isPending ? <Spinner /> : "Simpan Produk"}
         </Button>
       </form>
     </div>

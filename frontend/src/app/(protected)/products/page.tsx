@@ -2,9 +2,7 @@
 
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
-import { Category, Product } from "@/types"
-import { Label } from "@/components/ui/label"
+import { PlusIcon, Search } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -15,125 +13,80 @@ import {
 import columns from "./_components/columns"
 import DataTable from "@/components/DataTable"
 import AppPagination from "@/components/AppPagination"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
-// Dummy Data (extended for table view)
-const INITIAL_DUMMY_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    sku: "BRG001",
-    name: "Kopi Susu Gula Aren",
-    price: 18000,
-    stock: 50,
-    category: "Minuman",
-  },
-  {
-    id: 2,
-    sku: "BRG002",
-    name: "Cafe Latte",
-    price: 22000,
-    stock: 30,
-    category: "Minuman",
-  },
-  {
-    id: 3,
-    sku: "BRG003",
-    name: "Croissant Original",
-    price: 15000,
-    stock: 20,
-    category: "Makanan",
-  },
-  {
-    id: 4,
-    sku: "BRG004",
-    name: "Brownies Choco",
-    price: 12000,
-    stock: 15,
-    category: "Makanan",
-  },
-  {
-    id: 5,
-    sku: "BRG005",
-    name: "Matcha Latte",
-    price: 24000,
-    stock: 25,
-    category: "Minuman",
-  },
-  {
-    id: 6,
-    sku: "BRG006",
-    name: "Espresso",
-    price: 15000,
-    stock: 100,
-    category: "Minuman",
-  },
-  {
-    id: 7,
-    sku: "BRG007",
-    name: "Sandwich Tune",
-    price: 25000,
-    stock: 10,
-    category: "Makanan",
-  },
-  {
-    id: 8,
-    sku: "BRG008",
-    name: "Muffin Blueberry",
-    price: 18000,
-    stock: 12,
-    category: "Makanan",
-  },
-]
-
-const categories: Category[] = [
-  {
-    id: 1,
-    name: "Makanan",
-  },
-  {
-    id: 2,
-    name: "Minuman",
-  },
-]
+import { useProducts } from "@/services/hooks/useProduct"
+import { useCategories } from "@/services/hooks/useCategory"
+import { useDebounce } from "@/hooks/useDebounce"
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(INITIAL_DUMMY_PRODUCTS)
+  const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
+  const [categoryId, setCategoryId] = useState<string>("all")
+  const debouncedSearch = useDebounce(searchQuery, 500)
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const { data: categoriesData } = useCategories({
+    limit: 100,
+  })
+
+  const { data, isLoading } = useProducts({
+    page,
+    limit: 10,
+    name: debouncedSearch as string,
+    category_id: categoryId === "all" ? undefined : parseInt(categoryId),
+  })
+
+  const products = data?.data?.products || []
+  const meta = data?.meta
+  const categories = categoriesData?.data?.categories || []
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Manajemen Produk</h1>
-        <p className="text-muted-foreground">
-          Kelola produk di toko Anda di sini.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Manajemen Produk</h1>
+          <p className="text-muted-foreground">
+            Kelola produk di toko Anda di sini.
+          </p>
+        </div>
+
+        <Button className="gap-2 rounded-xl" asChild>
+          <Link href="/products/add">
+            <PlusIcon size={18} />
+            Tambah Produk
+          </Link>
+        </Button>
       </div>
 
       <div className="flex gap-4 flex-col">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Cari nama kategori..."
-              className="pl-9 h-11 bg-card rounded-xl border-border/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Cari nama produk..."
+            className="pl-9 h-11 bg-card rounded-xl border-border/50"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+              setPage(1)
+            }}
+          />
         </div>
 
-        <Select>
-          <SelectTrigger className="min-w-64">
-            <SelectValue placeholder="Pilih Kategori" />
+        <Select
+          value={categoryId}
+          onValueChange={(value) => {
+            setCategoryId(value)
+            setPage(1)
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-64 h-11 rounded-xl bg-card border-border/50">
+            <SelectValue placeholder="Semua Kategori" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="all">Semua Kategori</SelectItem>
             {categories.map((category) => (
-              <SelectItem key={category.id} value={category.name}>
+              <SelectItem key={category.id} value={category.id.toString()}>
                 {category.name}
               </SelectItem>
             ))}
@@ -141,9 +94,15 @@ export default function ProductsPage() {
         </Select>
       </div>
 
-      <DataTable columns={columns} data={filteredProducts} />
+      <DataTable columns={columns} data={products} isLoading={isLoading} />
 
-      <AppPagination totalPages={4} currentPage={1} />
+      {meta && (
+        <AppPagination
+          totalPages={meta.total_pages}
+          currentPage={meta.current_page}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   )
 }

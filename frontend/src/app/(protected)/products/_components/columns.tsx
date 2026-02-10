@@ -23,7 +23,7 @@ const columns: ColumnDef<Product>[] = [
     accessorKey: "category",
     cell: ({ row }) => (
       <Badge variant="secondary" className="font-normal">
-        {row.original.category}
+        {row.original.category.name}
       </Badge>
     ),
   },

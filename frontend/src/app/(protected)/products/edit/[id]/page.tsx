@@ -2,22 +2,25 @@
 
 import { ProductForm } from "@/components/product/ProductForm"
 import { Button } from "@/components/ui/button"
-import { Product } from "@/types"
 import { ArrowLeftIcon } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-
-const product: Product = {
-  id: 1,
-  sku: "BRG001",
-  name: "Kopi Susu Gula Aren",
-  price: 18000,
-  stock: 50,
-  category: "Minuman",
-}
+import { useParams, useRouter } from "next/navigation"
+import { useProductDetail } from "@/services/hooks/useProduct"
 
 export default function EditProductPage() {
   const router = useRouter()
+  const params = useParams()
+  const id = parseInt(params.id as string)
+
+  const { data: product, isLoading } = useProductDetail(id)
+
+  if (isLoading) {
+    return <div>Memuat...</div>
+  }
+
+  if (!product) {
+    return <div>Produk tidak ditemukan.</div>
+  }
 
   return (
     <div className="flex flex-col gap-6">

@@ -13,8 +13,10 @@ export interface Product {
   name: string
   price: number
   stock: number
-  category: string
-  categoryId?: number
+  category: {
+    name: string
+  }
+  category_id: number
   image?: string
 }
 
@@ -72,6 +74,21 @@ export interface CategoryData {
 
 export interface CategoriesData {
   categories: Category[]
+}
+
+export interface ProductQueryParams {
+  page?: number
+  limit?: number
+  name?: string
+  category_id?: number
+}
+
+export interface ProductData {
+  product: Product
+}
+
+export interface ProductsData {
+  products: Product[]
 }
 
 export interface PaginatedResponse<T> {

@@ -13,6 +13,8 @@ import {
 } from "../ui/alert-dialog"
 import { Button } from "../ui/button"
 import { Trash2Icon } from "lucide-react"
+import { useDeleteProduct } from "@/services/hooks/useProduct"
+import { Spinner } from "../ui/spinner"
 
 type DeleteProductProps = {
   id: number
@@ -20,10 +22,12 @@ type DeleteProductProps = {
 
 function DeleteProduct({ id }: DeleteProductProps) {
   const [open, setOpen] = useState(false)
+  const deleteMutation = useDeleteProduct()
 
   const deleteProduct = () => {
-    setOpen(false)
-    console.log(id)
+    deleteMutation.mutate(id, {
+      onSuccess: () => setOpen(false),
+    })
   }
 
   return (
@@ -47,9 +51,15 @@ function DeleteProduct({ id }: DeleteProductProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Batal</AlertDialogCancel>
-          <Button variant="destructive" onClick={deleteProduct}>
-            Hapus
+          <AlertDialogCancel disabled={deleteMutation.isPending}>
+            Batal
+          </AlertDialogCancel>
+          <Button
+            variant="destructive"
+            onClick={deleteProduct}
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? <Spinner /> : "Hapus"}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

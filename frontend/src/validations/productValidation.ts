@@ -33,15 +33,17 @@ const create = z.object({
       })
       .positive({ error: "Stock harus berupa angka positif" }),
   ),
-  category: z
-    .string({
-      error: (issue) =>
-        issue.input == undefined
-          ? "Kategori harus diisi"
-          : "Kategori harus berupa string",
-    })
-    .min(1, "Kategori harus diisi")
-    .max(50, "Kategori terlalu panjang"),
+  category_id: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({
+        error: (issue) =>
+          issue.input == undefined
+            ? "Kategori harus diisi"
+            : "Kategori harus berupa angka",
+      })
+      .positive({ error: "Kategori harus diisi" }),
+  ),
   image: z
     .instanceof(File, { error: "Gambar harus diisi" })
     .refine((file) => file.size <= 2 * 1024 * 1024, {
@@ -89,15 +91,17 @@ const update = z.object({
       })
       .positive({ error: "Stock harus berupa angka positif" }),
   ),
-  category: z
-    .string({
-      error: (issue) =>
-        issue.input == undefined
-          ? "Kategori harus diisi"
-          : "Kategori harus berupa string",
-    })
-    .min(1, "Kategori harus diisi")
-    .max(50, "Kategori terlalu panjang"),
+  category_id: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({
+        error: (issue) =>
+          issue.input == undefined
+            ? "Kategori harus diisi"
+            : "Kategori harus berupa angka",
+      })
+      .positive({ error: "Kategori harus diisi" }),
+  ),
   image: z
     .instanceof(File, { error: "Gambar harus diisi" })
     .refine((file) => file.size <= 2 * 1024 * 1024, {
