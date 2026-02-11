@@ -5,6 +5,7 @@ import categoryRouter from "./categoryRouter.js"
 import productRouter from "./productRouter.js"
 import orderRouter from "./orderRouter.js"
 import reportRouter from "./reportRouter.js"
+import userRouter from "./userRouter.js"
 
 const router = express.Router()
 
@@ -12,6 +13,7 @@ router.use("/categories", categoryRouter)
 router.use("/products", productRouter)
 router.use("/orders", orderRouter)
 router.use("/reports", reportRouter)
+router.use("/users", userRouter)
 
 router.get("/health", (req, res) => {
   res.status(200).json("ok")
