@@ -1,3 +1,9 @@
+export interface User {
+  id: string
+  user_id: string
+  shop_name: string
+}
+
 export interface Category {
   id: number
   name: string

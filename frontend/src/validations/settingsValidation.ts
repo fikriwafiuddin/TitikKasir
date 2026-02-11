@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 const settingsSchema = z.object({
-  storeName: z
+  shop_name: z
     .string({
       error: (issue) =>
         issue.input == undefined
@@ -10,7 +10,7 @@ const settingsSchema = z.object({
     })
     .trim()
     .min(3, "Nama toko harus minimal 3 karakter")
-    .max(50, "Nama toko maksimal 50 karakter"),
+    .max(25, "Nama toko maksimal 25 karakter"),
 })
 
 export default settingsSchema

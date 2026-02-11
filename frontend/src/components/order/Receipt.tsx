@@ -3,7 +3,7 @@ import { CheckCircle2Icon, PrinterIcon, XIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { Button } from "../ui/button"
 
-import useSettingsStore from "@/store/useSettings"
+import { useGetUserData } from "@/services/hooks/useUser"
 
 type ReceiptProps = {
   orderWithItems: OrderWithItems
@@ -11,7 +11,7 @@ type ReceiptProps = {
 }
 
 function Receipt({ orderWithItems, onClose }: ReceiptProps) {
-  const { storeName } = useSettingsStore()
+  const { data: user } = useGetUserData()
 
   return (
     <div className="max-h-[80vh] overflow-y-auto bg-white text-slate-800 p-8 font-mono text-sm relative">
@@ -20,7 +20,7 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
       </div>
       <div className="text-center space-y-2 mb-8">
         <h2 className="text-xl font-bold tracking-tighter uppercase">
-          {storeName}
+          {user?.shop_name || "Titik Kasir"}
         </h2>
         <p className="text-xs text-muted-foreground uppercase tracking-widest">
           Transaksi Berhasil
@@ -73,7 +73,7 @@ function Receipt({ orderWithItems, onClose }: ReceiptProps) {
             Transaksi Selesai
           </p>
           <p className="text-[10px] text-muted-foreground italic">
-            Terima kasih telah berbelanja di {storeName}!
+            Terima kasih telah berbelanja di {user?.shop_name || "Titik Kasir"}!
           </p>
         </div>
         <div className="flex gap-2">
