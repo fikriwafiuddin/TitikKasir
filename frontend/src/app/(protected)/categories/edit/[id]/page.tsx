@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation"
 
 import { useCategory } from "@/services/hooks/useCategory"
 import { useParams } from "next/navigation"
+import { CategoryFormSkeleton } from "@/components/skeleton/CategoryFormSkeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
 function EditCategoryPage() {
   const router = useRouter()
@@ -18,10 +20,15 @@ function EditCategoryPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center border rounded-xl bg-card">
-        <div className="animate-pulse text-muted-foreground">
-          Memuat data kategori...
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-40 mb-2" />
+            <Skeleton className="h-4 w-60" />
+          </div>
+          <Skeleton className="h-10 w-28 rounded-xl" />
         </div>
+        <CategoryFormSkeleton />
       </div>
     )
   }

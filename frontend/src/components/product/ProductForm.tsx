@@ -36,7 +36,7 @@ export function ProductForm({
     product?.image || null,
   )
 
-  const { data: categoriesData } = useCategories({ limit: 100 })
+  const { data: categoriesData, isLoading } = useCategories({ limit: 100 })
   const categories = categoriesData?.data?.categories || []
 
   const createMutation = useCreateProduct()
@@ -135,7 +135,9 @@ export function ProductForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="category_id">Kategori</FieldLabel>
+                  <FieldLabel htmlFor="category_id">
+                    Kategori {isLoading && <Spinner />}
+                  </FieldLabel>
                   <Select
                     onValueChange={(val) => field.onChange(parseInt(val))}
                     value={field.value?.toString()}
@@ -144,6 +146,7 @@ export function ProductForm({
                       id="category_id"
                       aria-invalid={fieldState.invalid}
                       className="w-full rounded-xl h-10"
+                      disabled={isLoading}
                     >
                       <SelectValue placeholder="Pilih kategori" />
                     </SelectTrigger>

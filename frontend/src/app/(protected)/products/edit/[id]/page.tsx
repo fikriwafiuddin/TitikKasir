@@ -6,6 +6,8 @@ import { ArrowLeftIcon } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useProductDetail } from "@/services/hooks/useProduct"
+import { ProductFormSkeleton } from "@/components/skeleton/ProductFormSkeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function EditProductPage() {
   const router = useRouter()
@@ -15,7 +17,18 @@ export default function EditProductPage() {
   const { data: product, isLoading } = useProductDetail(id)
 
   if (isLoading) {
-    return <div>Memuat...</div>
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-40 mb-2" />
+            <Skeleton className="h-4 w-60" />
+          </div>
+          <Skeleton className="h-10 w-28 rounded-xl" />
+        </div>
+        <ProductFormSkeleton />
+      </div>
+    )
   }
 
   if (!product) {
