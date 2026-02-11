@@ -14,9 +14,13 @@ import useCartStore from "@/store/useCart"
 import CartEmpty from "./CartEmpty"
 import Image from "next/image"
 
+import { useCreateOrder } from "@/services/hooks/useOrder"
+import { Spinner } from "../ui/spinner"
+import { OrderWithItems } from "@/types"
+
 interface CartProps {
   onOpenChange: (open: boolean) => void
-  onCheckoutSuccess: () => void
+  onCheckoutSuccess: (order: OrderWithItems) => void
 }
 
 export function Cart({ onOpenChange, onCheckoutSuccess }: CartProps) {
@@ -29,9 +33,28 @@ export function Cart({ onOpenChange, onCheckoutSuccess }: CartProps) {
     0,
   )
 
+  const createOrder = useCreateOrder()
+
   const handleCheckout = () => {
-    onCheckoutSuccess()
-    onOpenChange(false)
+    createOrder.mutate(
+      {
+        total_amount: subtotal,
+        items: items.map((item) => ({
+          product_id: item.id,
+          product_name: item.name,
+          unit_price: item.price,
+          quantity: item.quantity,
+          sub_total: item.price * item.quantity,
+        })),
+      },
+      {
+        onSuccess: (data) => {
+          onCheckoutSuccess(data)
+          onOpenChange(false)
+          clearCart()
+        },
+      },
+    )
   }
 
   return (
@@ -149,13 +172,19 @@ export function Cart({ onOpenChange, onCheckoutSuccess }: CartProps) {
           </Button>
           <Button
             className="flex-1"
-            disabled={items.length === 0}
+            disabled={items.length === 0 || createOrder.isPending}
             onClick={handleCheckout}
           >
-            <div className="p-1 px-2.5 bg-white/20 rounded-lg">
-              <Receipt size={18} />
-            </div>
-            Proses Pesanan
+            {createOrder.isPending ? (
+              <Spinner />
+            ) : (
+              <>
+                <div className="p-1 px-2.5 bg-white/20 rounded-lg">
+                  <Receipt size={18} />
+                </div>
+                Proses Pesanan
+              </>
+            )}
           </Button>
         </div>
       </div>

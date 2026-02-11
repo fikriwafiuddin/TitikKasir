@@ -1,10 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { OrderWithItems } from "@/types"
-import { Button } from "@/components/ui/button"
-import { CircleXIcon, RefreshCwIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { formatCurrency, translateStatus } from "@/lib/utils"
-import ReceiptDialogButton from "@/components/order/ReceiptDialogButton"
+import { OrderActions } from "./OrderActions"
 
 const columns: ColumnDef<OrderWithItems>[] = [
   {
@@ -43,7 +41,7 @@ const columns: ColumnDef<OrderWithItems>[] = [
     cell: ({ row }) => (
       <Badge
         className="rounded-lg px-2 shrink-0"
-        variant={row.original.status === "success" ? "default" : "destructive"}
+        variant={row.original.status === "SUCCESS" ? "default" : "destructive"}
       >
         {translateStatus(row.original.status)}
       </Badge>
@@ -52,28 +50,7 @@ const columns: ColumnDef<OrderWithItems>[] = [
   {
     accessorKey: "actions",
     header: () => <span className="block text-right pr-6">Aksi</span>,
-    cell: ({ row }) => (
-      <div className="flex justify-end gap-1">
-        <ReceiptDialogButton orderWithItems={row.original} />
-        {row.original.status === "success" ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive"
-          >
-            <CircleXIcon size={16} />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive"
-          >
-            <RefreshCwIcon size={16} />
-          </Button>
-        )}
-      </div>
-    ),
+    cell: ({ row }) => <OrderActions order={row.original} />,
   },
 ]
 

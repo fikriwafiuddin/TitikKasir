@@ -1,7 +1,7 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
 
-export const STATUS_ORDER = ["success", "cancelled"]
+export const STATUS_ORDER = ["SUCCESS", "CANCELLED"]
 
 export const MONTHS = [
   { label: "Januari", value: "01" },

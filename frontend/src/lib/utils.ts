@@ -33,9 +33,9 @@ export function formatDateTime(dateString: string) {
 
 export function translateStatus(status: string) {
   switch (status) {
-    case "success":
+    case "SUCCESS":
       return "Berhasil"
-    case "cancelled":
+    case "CANCELLED":
       return "Dibatalkan"
     default:
       return status

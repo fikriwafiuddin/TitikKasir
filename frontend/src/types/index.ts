@@ -38,7 +38,7 @@ export interface Order {
   orderId: string
   totalAmount: number
   date: string
-  status: "success" | "cancelled"
+  status: "SUCCESS" | "CANCELLED"
 }
 
 export interface OrderWithItems extends Order {
@@ -89,6 +89,37 @@ export interface ProductData {
 
 export interface ProductsData {
   products: Product[]
+}
+
+export interface CreateOrderItem {
+  product_id: number
+  product_name: string
+  unit_price: number
+  quantity: number
+  sub_total: number
+}
+
+export interface CreateOrderData {
+  total_amount: number
+  items: CreateOrderItem[]
+}
+
+export interface OrderQueryParams {
+  page?: number
+  limit?: number
+  search?: string
+  status?: string
+  date?: string
+  month?: string
+  year?: string
+}
+
+export interface OrderData {
+  order: OrderWithItems
+}
+
+export interface OrdersData {
+  orders: OrderWithItems[]
 }
 
 export interface PaginatedResponse<T> {

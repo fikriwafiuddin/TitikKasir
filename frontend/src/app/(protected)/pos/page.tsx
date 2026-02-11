@@ -4,7 +4,6 @@ import { useState } from "react"
 import { ProductCard } from "@/components/pos/ProductCard"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import { toast } from "sonner"
 import {
   Select,
   SelectContent,
@@ -13,188 +12,105 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import EmptyProducts from "./_components/EmptyProducts"
-import { Category, OrderWithItems, Product } from "@/types"
 import CartSheet from "@/components/cart/CartSheet"
-import ReceiptDialog from "@/components/order/ReceiptDialog"
-import useCartStore from "@/store/useCart"
 import AppPagination from "@/components/AppPagination"
 
-// Dummy Data
-const DUMMY_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    sku: "CAP-001",
-    name: "Cappuccino",
-    category: "Coffee",
-    price: 25000,
-    stock: 50,
-    image:
-      "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=400&fit=crop",
-  },
-  {
-    id: 2,
-    sku: "ESP-002",
-    name: "Espresso",
-    category: "Coffee",
-    price: 15000,
-    stock: 100,
-    image:
-      "https://images.unsplash.com/photo-1510707577719-5d6815a2559a?w=400&h=400&fit=crop",
-  },
-  {
-    id: 3,
-    sku: "LAT-003",
-    name: "Latte",
-    category: "Coffee",
-    price: 28000,
-    stock: 45,
-    image:
-      "https://images.unsplash.com/photo-1536939459926-301728717817?w=400&h=400&fit=crop",
-  },
-  {
-    id: 4,
-    sku: "CRO-004",
-    name: "Croissant",
-    category: "Food",
-    price: 32000,
-    stock: 20,
-    image:
-      "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=400&fit=crop",
-  },
-  {
-    id: 5,
-    sku: "BRO-005",
-    name: "Brownies",
-    category: "Food",
-    price: 22000,
-    stock: 30,
-    image:
-      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop",
-  },
-  {
-    id: 6,
-    sku: "TEA-006",
-    name: "Earl Grey Tea",
-    category: "Non-Coffee",
-    price: 18000,
-    stock: 60,
-    image:
-      "https://images.unsplash.com/photo-1594631252845-ba9fb9bc37db?w=400&h=400&fit=crop",
-  },
-]
-
-const categories: Category[] = [
-  {
-    id: 1,
-    name: "Makanan",
-  },
-  {
-    id: 2,
-    name: "Minuman",
-  },
-]
+import { useProducts } from "@/services/hooks/useProduct"
+import { useCategories } from "@/services/hooks/useCategory"
+import { useDebounce } from "@/hooks/useDebounce"
 
 export default function POSPage() {
+  const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
-  const [isReceiptOpen, setIsReceiptOpen] = useState(false)
-  const [lastOrder, setLastOrder] = useState<OrderWithItems | null>(null)
-  const items = useCartStore((state) => state.items)
-  const clearCart = useCartStore((state) => state.clearCart)
+  const [categoryId, setCategoryId] = useState<string>("all")
+  const debouncedSearch = useDebounce(searchQuery, 500)
 
-  const filteredProducts = DUMMY_PRODUCTS.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-    return matchesSearch
+  const { data: categoriesData } = useCategories({
+    limit: 100,
   })
 
-  const handleCheckout = () => {
-    const total =
-      items.reduce((sum, item) => sum + item.price * item.quantity, 0) * 1.1
-    const orderId = `ORD-${Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, "0")}`
+  const { data, isLoading } = useProducts({
+    page,
+    limit: 15,
+    name: debouncedSearch as string,
+    category_id: categoryId === "all" ? undefined : parseInt(categoryId),
+  })
 
-    setLastOrder({
-      id: 0,
-      orderId,
-      items: items.map((item) => ({
-        id: item.id,
-        productId: item.id,
-        productName: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        subtotal: item.price * item.quantity,
-      })),
-      status: "success",
-      totalAmount: total,
-      date: new Date().toLocaleString("id-ID"),
-    })
-
-    clearCart()
-    setIsReceiptOpen(true)
-    toast.success("Checkout berhasil!")
-  }
+  const products = data?.data?.products || []
+  const meta = data?.meta
+  const categories = categoriesData?.data?.categories || []
 
   return (
     <div className="flex flex-col h-full gap-6 relative">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-6">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Point of Sale</h1>
-            <p className="text-muted-foreground text-sm">
-              Pilih produk yang ingin ditambahkan ke pesanan Anda.
-            </p>
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Point of Sale</h1>
+          <p className="text-muted-foreground text-sm">
+            Pilih produk yang ingin ditambahkan ke pesanan Anda.
+          </p>
+        </div>
 
-          <div className="flex gap-4 flex-col">
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Cari nama kategori..."
-                  className="pl-9 h-11 bg-card rounded-xl border-border/50"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+        <div className="flex gap-4 flex-col">
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama produk..."
+                className="pl-9 h-11 bg-card rounded-xl border-border/50"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setPage(1)
+                }}
+              />
             </div>
-
-            <Select>
-              <SelectTrigger className="min-w-64">
-                <SelectValue placeholder="Pilih Kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.name}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
+
+          <Select
+            value={categoryId}
+            onValueChange={(value) => {
+              setCategoryId(value)
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-64 h-11 rounded-xl bg-card border-border/50">
+              <SelectValue placeholder="Semua Kategori" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Kategori</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-24">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-          {filteredProducts.length === 0 && <EmptyProducts />}
+          {isLoading
+            ? Array.from({ length: 15 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-64 bg-muted animate-pulse rounded-2xl"
+                />
+              ))
+            : products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+          {!isLoading && products.length === 0 && <EmptyProducts />}
         </div>
 
-        <AppPagination totalPages={3} currentPage={1} />
+        {meta && meta.total_pages > 1 && (
+          <AppPagination
+            totalPages={meta.total_pages}
+            currentPage={meta.current_page}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
-      <CartSheet onCheckoutSuccess={handleCheckout} />
-
-      {/* Checkout Receipt Dialog */}
-      {lastOrder && (
-        <ReceiptDialog
-          open={isReceiptOpen}
-          onOpenChange={setIsReceiptOpen}
-          orderWithItems={lastOrder}
-        />
-      )}
+      <CartSheet />
     </div>
   )
 }
