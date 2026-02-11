@@ -55,6 +55,7 @@ model Order {
   order_id     String      @unique @db.VarChar(10)
   user_id      String      @db.Uuid
   total_amount Int
+  status       String      @default("SUCCESS") @db.VarChar(10)
   date         DateTime    @default(now())
   order_items  OrderItem[]
 
