@@ -1,8 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PackageIcon } from "lucide-react"
+import { LowStock as LowStockType } from "@/types"
 import React from "react"
 
-function LowStock() {
+interface LowStockProps {
+  data?: LowStockType[]
+}
+
+function LowStock({ data }: LowStockProps) {
   return (
     <Card className="rounded-2xl shadow-sm border-border/50 overflow-hidden">
       <CardHeader>
@@ -13,11 +18,7 @@ function LowStock() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {[
-            { name: "Muffin Blueberry", stock: 2, category: "Makanan" },
-            { name: "Sandwich Tuna", stock: 1, category: "Makanan" },
-            { name: "Espresso Beans", stock: 5, category: "Bahan" },
-          ].map((item, i) => (
+          {data?.map((item, i) => (
             <div
               key={i}
               className="flex items-center justify-between p-3 rounded-xl bg-destructive/5 border border-destructive/10"
@@ -36,6 +37,11 @@ function LowStock() {
               </div>
             </div>
           ))}
+          {(!data || data.length === 0) && (
+            <p className="text-center text-muted-foreground py-10">
+              Semua stok aman
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

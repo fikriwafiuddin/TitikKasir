@@ -15,38 +15,13 @@ import {
   YAxis,
 } from "recharts"
 
-const SALES_DATA = [
-  { date: "01", sales: 4200000 },
-  { date: "02", sales: 38000 },
-  { date: "03", sales: 5100000 },
-  { date: "04", sales: 4800000 },
-  { date: "05", sales: 6200000 },
-  { date: "06", sales: 8500000 },
-  { date: "07", sales: 7200000 },
-  { date: "08", sales: 5800000 },
-  { date: "09", sales: 6500000 },
-  { date: "10", sales: 7000000 },
-  { date: "11", sales: 6800000 },
-  { date: "12", sales: 7500000 },
-  { date: "13", sales: 8000000 },
-  { date: "14", sales: 7800000 },
-  { date: "15", sales: 8200000 },
-  { date: "16", sales: 7600000 },
-  { date: "17", sales: 6900000 },
-  { date: "18", sales: 7400000 },
-  { date: "19", sales: 8100000 },
-  { date: "20", sales: 7900000 },
-  { date: "21", sales: 8300000 },
-  { date: "22", sales: 7700000 },
-  { date: "23", sales: 6700000 },
-  { date: "24", sales: 7300000 },
-  { date: "25", sales: 8400000 },
-  { date: "26", sales: 7100000 },
-  { date: "27", sales: 6600000 },
-  { date: "28", sales: 7600000 },
-]
+import { DailySales } from "@/types"
 
-function SalesChart() {
+interface SalesChartProps {
+  data?: DailySales[]
+}
+
+function SalesChart({ data }: SalesChartProps) {
   return (
     <Card className="rounded-2xl shadow-sm border-border/50 overflow-hidden">
       <CardHeader>
@@ -57,7 +32,7 @@ function SalesChart() {
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={SALES_DATA}
+              data={data || []}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <defs>
@@ -82,7 +57,13 @@ function SalesChart() {
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "#64748b", fontSize: 12 }}
-                tickFormatter={(value) => `Rp ${value / 1000000}M`}
+                tickFormatter={(value) =>
+                  `Rp ${
+                    value >= 1000000
+                      ? `${(value / 1000000).toFixed(1)}M`
+                      : `${(value / 1000).toFixed(0)}k`
+                  }`
+                }
               />
               <Tooltip
                 contentStyle={{

@@ -128,3 +128,33 @@ export interface PaginatedResponse<T> {
   data: T
   meta: PaginationMeta
 }
+export interface ReportSummary {
+  revenue: { value: number; growth: number }
+  transactions: { value: number; growth: number }
+  quantity: { value: number; growth: number }
+  overallGrowth: number
+}
+
+export interface DailySales {
+  date: string
+  sales: number
+}
+
+export interface TopProduct {
+  name: string
+  quantity: number
+  revenue: number
+}
+
+export interface LowStock {
+  name: string
+  stock: number
+  category: string
+}
+
+export interface ReportData {
+  summary: ReportSummary
+  dailySales: DailySales[]
+  topProducts: TopProduct[]
+  lowStock: LowStock[]
+}

@@ -1,7 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { formatCurrency } from "@/lib/utils"
+import { TopProduct } from "@/types"
 import React from "react"
 
-function TopProducts() {
+interface TopProductsProps {
+  data?: TopProduct[]
+}
+
+function TopProducts({ data }: TopProductsProps) {
   return (
     <Card className="rounded-2xl shadow-sm border-border/50 overflow-hidden">
       <CardHeader>
@@ -9,20 +15,7 @@ function TopProducts() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {[
-            {
-              name: "Kopi Susu Gula Aren",
-              sales: 85,
-              revenue: "Rp 1.530.000",
-            },
-            { name: "Cafe Latte", sales: 62, revenue: "Rp 1.364.000" },
-            {
-              name: "Croissant Original",
-              sales: 48,
-              revenue: "Rp 720.000",
-            },
-            { name: "Matcha Latte", sales: 36, revenue: "Rp 864.000" },
-          ].map((item, i) => (
+          {data?.map((item, i) => (
             <div
               key={i}
               className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors"
@@ -34,15 +27,20 @@ function TopProducts() {
                 <div className="flex flex-col">
                   <span className="font-semibold text-sm">{item.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {item.sales} terjual
+                    {item.quantity} terjual
                   </span>
                 </div>
               </div>
               <span className="font-bold text-sm text-primary">
-                {item.revenue}
+                {formatCurrency(item.revenue)}
               </span>
             </div>
           ))}
+          {(!data || data.length === 0) && (
+            <p className="text-center text-muted-foreground py-10">
+              Tidak ada data penjualan
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

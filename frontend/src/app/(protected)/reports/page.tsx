@@ -14,6 +14,9 @@ import LowStock from "./_components/LowStock"
 import StatsSection from "./_components/StatsSection"
 import SalesChart from "./_components/SalesChart"
 
+import { useReport } from "@/services/hooks/useReport"
+import { ReportsSkeleton } from "./_components/ReportsSkeleton"
+
 export default function ReportsPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -24,6 +27,8 @@ export default function ReportsPage() {
     (new Date().getMonth() + 1).toString().padStart(2, "0")
   const year = searchParams.get("year") || new Date().getFullYear().toString()
 
+  const { data, isLoading } = useReport(month, year)
+
   const handleMonthChange = (value: string) => {
     router.push(`${pathname}?month=${value}&year=${year}`)
   }
@@ -31,6 +36,8 @@ export default function ReportsPage() {
   const handleYearChange = (value: string) => {
     router.push(`${pathname}?month=${month}&year=${value}`)
   }
+
+  const reportData = data?.data
 
   return (
     <div className="flex flex-col gap-6">
@@ -74,15 +81,21 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <StatsSection />
+      {isLoading ? (
+        <ReportsSkeleton />
+      ) : (
+        <>
+          <StatsSection summary={reportData?.summary} />
 
-      <SalesChart />
+          <SalesChart data={reportData?.dailySales} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-        <TopProducts />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            <TopProducts data={reportData?.topProducts} />
 
-        <LowStock />
-      </div>
+            <LowStock data={reportData?.lowStock} />
+          </div>
+        </>
+      )}
     </div>
   )
 }
