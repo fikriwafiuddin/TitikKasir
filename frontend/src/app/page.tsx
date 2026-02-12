@@ -9,8 +9,14 @@ import {
   LayoutDashboard,
   Smartphone,
 } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Navigation */}
@@ -39,12 +45,20 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" asChild>
-              <Link href="/auth/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/auth/register">Get Started</Link>
-            </Button>
+            {user ? (
+              <Button asChild>
+                <Link href="/pos">Masuk ke aplikasi</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/auth/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/auth/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -70,19 +84,31 @@ export default function Home() {
                   stok hingga laporan keuangan, semua dalam satu genggaman.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="h-14 px-8 text-lg gap-2" asChild>
-                    <Link href="/auth/register">
-                      Mulai Sekarang <ArrowRight size={20} />
-                    </Link>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 px-8 text-lg"
-                    asChild
-                  >
-                    <Link href="#features">Lihat Fitur</Link>
-                  </Button>
+                  {user ? (
+                    <Button size="lg" className="h-14 px-8 text-lg" asChild>
+                      <Link href="/pos">Masuk ke aplikasi</Link>
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        size="lg"
+                        className="h-14 px-8 text-lg gap-2"
+                        asChild
+                      >
+                        <Link href="/auth/register">
+                          Mulai Sekarang <ArrowRight size={20} />
+                        </Link>
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="h-14 px-8 text-lg"
+                        asChild
+                      >
+                        <Link href="#features">Lihat Fitur</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
                 <div className="flex items-center gap-6 pt-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">

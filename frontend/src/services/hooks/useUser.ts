@@ -7,7 +7,7 @@ import { AxiosError } from "axios"
 
 export function useGetUserData() {
   return useQuery<User>({
-    queryKey: ["user"],
+    queryKey: ["user-profile"],
     queryFn: async () => {
       return await userApi.getUserData()
     },
@@ -23,7 +23,7 @@ export function useUpdateUserData() {
     },
     onSuccess: () => {
       toast.success("Pengaturan berhasil diubah")
-      queryClient.invalidateQueries({ queryKey: ["user"] })
+      queryClient.invalidateQueries({ queryKey: ["user-profile"] })
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Gagal mengubah pengaturan.")

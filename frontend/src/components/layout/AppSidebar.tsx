@@ -54,6 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const displayName = user?.user_metadata?.first_name
     ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim()
     : "Pengguna"
+  console.log(user)
 
   return (
     <Sidebar variant="inset" {...props} collapsible="icon">
