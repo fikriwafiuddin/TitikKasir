@@ -13,6 +13,7 @@ import { Store, Zap } from "lucide-react"
 
 import { LoginForm } from "@/components/auth/LoginForm"
 import GoogleLogin from "@/components/auth/GoogleLogin"
+import Image from "next/image"
 
 export default function LoginPage() {
   return (
@@ -21,10 +22,8 @@ export default function LoginPage() {
       <div className="flex flex-1 items-center justify-center p-8 lg:p-12">
         <div className="w-full max-w-md space-y-8">
           <div className="flex flex-col items-center gap-2 lg:hidden mb-8">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-2xl">
-                T
-              </span>
+            <div className="size-10 relative">
+              <Image src="/logo.png" alt="Logo" fill />
             </div>
             <span className="text-2xl font-bold tracking-tight text-primary">
               TitikKasir
@@ -76,8 +75,8 @@ export default function LoginPage() {
 
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-2 mb-12">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-              <span className="text-primary font-bold text-2xl">T</span>
+            <div className="size-10 relative">
+              <Image src="/logo.png" alt="Logo" fill />
             </div>
             <span className="text-2xl font-bold tracking-tight">
               TitikKasir

@@ -10,6 +10,7 @@ import {
   Smartphone,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
+import Image from "next/image"
 
 export default async function Home() {
   const supabase = await createClient()
@@ -23,10 +24,8 @@ export default async function Home() {
       <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xl">
-                T
-              </span>
+            <div className="size-8 relative">
+              <Image src="/logo.png" alt="Logo" fill />
             </div>
             <span className="text-xl font-bold tracking-tight">TitikKasir</span>
           </div>
@@ -249,10 +248,8 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xs">
-                  T
-                </span>
+              <div className="size-6 relative">
+                <Image src="/logo.png" alt="Logo" fill />
               </div>
               <span className="font-bold tracking-tight">TitikKasir</span>
             </div>
