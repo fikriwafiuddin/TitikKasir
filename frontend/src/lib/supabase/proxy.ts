@@ -41,11 +41,20 @@ export async function updateSession(request: NextRequest) {
 
   const user = data?.claims
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/")
-  ) {
+  const pathname = request.nextUrl.pathname
+  const isProtectedRoute = () => {
+    const protectedPaths = [
+      "/pos",
+      "/categories",
+      "/orders",
+      "/products",
+      "/reports",
+      "/settings",
+    ]
+    return protectedPaths.some((path) => pathname.startsWith(path))
+  }
+
+  if (!user && isProtectedRoute()) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = "/auth/login"
