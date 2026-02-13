@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import reportServices from "@/services/reportServices.js"
-import { SuccessResponse } from "@/utils/response.js"
+import reportServices from "../services/reportServices.js"
+import { SuccessResponse } from "../utils/response.js"
 
 const getSummary = async (req: Request, res: Response, next: NextFunction) => {
   try {

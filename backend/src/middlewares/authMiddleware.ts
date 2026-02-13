@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase.js"
-import { ErrorResponse } from "@/utils/response.js"
+import { supabase } from "../lib/supabase.js"
+import { ErrorResponse } from "../utils/response.js"
 import { NextFunction, Request, Response } from "express"
 
 const authMiddleware = async (

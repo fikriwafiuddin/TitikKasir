@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@/utils/response.js"
+import { ErrorResponse } from "../utils/response.js"
 import multer from "multer"
 
 // Use memory storage for Vercel (stateless/read-only filesystem)

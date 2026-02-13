@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma.js"
+import prisma from "../lib/prisma.js"
 
 const create = async (data: any) => {
   return await prisma.order.create({

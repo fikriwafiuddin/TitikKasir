@@ -1,4 +1,4 @@
-import categoryRepository from "@/repositories/categoryRepository.js"
+import categoryRepository from "../repositories/categoryRepository.js"
 
 /**
  * Generate a new SKU for a product.

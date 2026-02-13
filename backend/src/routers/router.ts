@@ -1,5 +1,5 @@
-import errorMiddleware from "@/middlewares/errorMiddleware.js"
-import { ErrorResponse, SuccessResponse } from "@/utils/response.js"
+import errorMiddleware from "../middlewares/errorMiddleware.js"
+import { ErrorResponse, SuccessResponse } from "../utils/response.js"
 import express from "express"
 import categoryRouter from "./categoryRouter.js"
 import productRouter from "./productRouter.js"

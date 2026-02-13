@@ -1,8 +1,8 @@
-import productRepository from "@/repositories/productRepository.js"
-import categoryRepository from "@/repositories/categoryRepository.js"
-import { generateNextProductSku } from "@/helpers/productHelper.js"
-import { ErrorResponse } from "@/utils/response.js"
-import cloudinary from "@/lib/cloudinary.js"
+import productRepository from "../repositories/productRepository.js"
+import categoryRepository from "../repositories/categoryRepository.js"
+import { generateNextProductSku } from "../helpers/productHelper.js"
+import { ErrorResponse } from "../utils/response.js"
+import cloudinary from "../lib/cloudinary.js"
 import { UploadApiOptions } from "cloudinary"
 
 const uploadFromBuffer = (buffer: Buffer, options: UploadApiOptions) => {

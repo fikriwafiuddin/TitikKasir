@@ -1,6 +1,6 @@
-import orderRepository from "@/repositories/orderRepository.js"
-import { ErrorResponse } from "@/utils/response.js"
-import prisma from "@/lib/prisma.js"
+import orderRepository from "../repositories/orderRepository.js"
+import { ErrorResponse } from "../utils/response.js"
+import prisma from "../lib/prisma.js"
 
 const create = async (userId: string, data: any) => {
   const result = await prisma.$transaction(async (tx) => {

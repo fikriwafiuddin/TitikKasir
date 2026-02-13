@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import orderServices from "@/services/orderServices.js"
-import { SuccessResponse } from "@/utils/response.js"
-import validation from "@/validations/validation.js"
-import orderValidation from "@/validations/orderValidation.js"
+import orderServices from "../services/orderServices.js"
+import { SuccessResponse } from "../utils/response.js"
+import validation from "../validations/validation.js"
+import orderValidation from "../validations/orderValidation.js"
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {

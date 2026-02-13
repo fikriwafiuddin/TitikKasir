@@ -1,4 +1,4 @@
-import userRepository from "@/repositories/userRepository.js"
+import userRepository from "../repositories/userRepository.js"
 
 /**
  * Generate a new Order ID.

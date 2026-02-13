@@ -1,4 +1,4 @@
-import logger from "@/utils/logger.js"
+import logger from "../utils/logger.js"
 import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.SUPABASE_URL || ""

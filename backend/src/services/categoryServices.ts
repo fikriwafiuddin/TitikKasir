@@ -1,7 +1,7 @@
-import categoryRepository from "@/repositories/categoryRepository.js"
-import { generateUniqueCategorySkuPrefix } from "@/helpers/categoryHelper.js"
-import { FormCreateCategory } from "@/types/form.js"
-import { ErrorResponse } from "@/utils/response.js"
+import categoryRepository from "../repositories/categoryRepository.js"
+import { generateUniqueCategorySkuPrefix } from "../helpers/categoryHelper.js"
+import { FormCreateCategory } from "../types/form.js"
+import { ErrorResponse } from "../utils/response.js"
 
 const getAll = async (
   userId: string,

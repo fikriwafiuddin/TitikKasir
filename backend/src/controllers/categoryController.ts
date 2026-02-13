@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import categoryService from "@/services/categoryServices.js"
-import { SuccessResponse } from "@/utils/response.js"
-import validation from "@/validations/validation.js"
-import categoryValidation from "@/validations/categoryValidation.js"
+import categoryService from "../services/categoryServices.js"
+import { SuccessResponse } from "../utils/response.js"
+import validation from "../validations/validation.js"
+import categoryValidation from "../validations/categoryValidation.js"
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {

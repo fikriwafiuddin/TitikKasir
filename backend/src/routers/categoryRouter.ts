@@ -1,5 +1,5 @@
-import authMiddleware from "@/middlewares/authMiddleware.js"
-import categoryController from "@/controllers/categoryController.js"
+import authMiddleware from "../middlewares/authMiddleware.js"
+import categoryController from "../controllers/categoryController.js"
 import express from "express"
 
 const categoryRouter = express.Router()

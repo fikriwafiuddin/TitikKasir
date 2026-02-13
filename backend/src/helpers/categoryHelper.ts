@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma.js"
+import prisma from "../lib/prisma.js"
 
 /**
  * Generate a unique SKU prefix for a category.

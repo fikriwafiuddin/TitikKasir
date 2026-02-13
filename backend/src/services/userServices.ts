@@ -1,4 +1,4 @@
-import userRepository from "@/repositories/userRepository.js"
+import userRepository from "../repositories/userRepository.js"
 
 const getByUserId = async (userId: string) => {
   return await userRepository.findByUserId(userId)

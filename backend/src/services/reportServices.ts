@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma.js"
+import prisma from "../lib/prisma.js"
 
 /**
  * Internal helper to calculate date ranges for current and previous month
