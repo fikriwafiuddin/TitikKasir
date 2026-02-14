@@ -43,18 +43,16 @@ const sidebarItems = [
   { name: "Laporan", href: "/reports", icon: BarChart3Icon },
 ]
 
-import { useUser, useLogout } from "@/services/hooks/useAuth"
+import { useAuth } from "@/context/AuthContext"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const { isMobile, setOpenMobile, state } = useSidebar()
-  const { data: user } = useUser()
-  const { mutate: logout } = useLogout()
+  const { user, signOut } = useAuth()
 
   const displayName = user?.user_metadata?.first_name
     ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim()
     : "Pengguna"
-  console.log(user)
 
   return (
     <Sidebar variant="inset" {...props} collapsible="icon">
@@ -148,7 +146,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 className="w-56 rounded-xl"
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => logout()}>
+                  <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Keluar</span>
                   </DropdownMenuItem>
