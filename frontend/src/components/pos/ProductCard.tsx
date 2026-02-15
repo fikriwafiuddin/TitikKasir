@@ -49,9 +49,9 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
       </CardContent>
       <CardFooter className="p-3">
-        <Button size="sm" className="w-full gap-2">
-          <Plus size={16} />
-          Add to Cart
+        <Button size="sm" className="w-full gap-2 text-xs sm:text-base">
+          <Plus />
+          Tambah
         </Button>
       </CardFooter>
     </Card>

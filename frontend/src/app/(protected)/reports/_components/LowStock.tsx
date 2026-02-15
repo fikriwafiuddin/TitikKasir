@@ -32,7 +32,7 @@ function LowStock({ data }: LowStockProps) {
                   {item.stock}
                 </p>
                 <p className="text-[10px] font-bold text-destructive/60 uppercase">
-                  Left
+                  Tersisa
                 </p>
               </div>
             </div>

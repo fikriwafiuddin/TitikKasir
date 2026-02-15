@@ -182,7 +182,7 @@ export function Cart({ onOpenChange, onCheckoutSuccess }: CartProps) {
                 <div className="p-1 px-2.5 bg-white/20 rounded-lg">
                   <Receipt size={18} />
                 </div>
-                Proses Pesanan
+                Bayar
               </>
             )}
           </Button>

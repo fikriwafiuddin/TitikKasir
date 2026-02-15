@@ -54,7 +54,7 @@ function CartSheet() {
             </span>
           </Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="w-screen max-w-sm">
           <SheetHeader className="hidden">
             <SheetTitle>Keranjang</SheetTitle>
           </SheetHeader>
