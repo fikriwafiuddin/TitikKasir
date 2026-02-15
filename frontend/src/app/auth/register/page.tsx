@@ -92,8 +92,8 @@ export default function RegisterPage() {
               Satu Platform untuk Semua Kebutuhan Bisnis Anda.
             </h2>
             <p className="text-xl text-primary-foreground/80 leading-relaxed">
-              Bergabunglah dengan komunitas pengusaha sukses dan mulai
-              transformasi digital bisnis Anda hari ini bersama TitikKasir.
+              Mulailah perjalanan digital bisnis Anda sekarang dan kelola
+              operasional jadi lebih efisien bersama TitikKasir.
             </p>
           </div>
         </div>

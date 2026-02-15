@@ -70,7 +70,7 @@ export default async function Home() {
               <div className="space-y-8 max-w-2xl">
                 <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/10 text-primary border border-primary/20">
                   <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse" />
-                  New: Dashboard Analytics 2.0
+                  Baru: TitikKasir v1.0 Siap Digunakan
                 </div>
                 <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
                   Kelola Bisnis Jadi Lebih{" "}
@@ -174,18 +174,18 @@ export default async function Home() {
                 },
                 {
                   icon: <LayoutDashboard className="text-primary" />,
-                  title: "Multi-User",
-                  desc: "Kelola tim Anda dengan hak akses yang berbeda-beda untuk setiap peran.",
+                  title: "Laporan Real-time",
+                  desc: "Pantau performa bisnis Anda kapan saja dengan laporan yang selalu terupdate.",
                 },
                 {
                   icon: <Smartphone className="text-primary" />,
-                  title: "Hybrid Apps",
-                  desc: "Akses dari perangkat apa saja, baik smartphone, tablet, maupun desktop.",
+                  title: "Desain Responsif",
+                  desc: "Akses aplikasi dengan nyaman dari perangkat apa saja (Desktop, Tablet, atau HP).",
                 },
                 {
                   icon: <ShieldCheck className="text-primary" />,
-                  title: "Cloud Backup",
-                  desc: "Semua data tersimpan aman di cloud dan dapat diakses kapan saja.",
+                  title: "Data Terenkripsi",
+                  desc: "Keamanan data Anda adalah prioritas kami dengan teknologi enkripsi modern.",
                 },
               ].map((feature, i) => (
                 <div
@@ -217,8 +217,8 @@ export default async function Home() {
                   Siap untuk Menumbuhkan Bisnis Anda?
                 </h2>
                 <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-                  Bergabunglah dengan ribuan pengusaha yang telah mempercayakan
-                  operasional bisnis mereka kepada TitikKasir.
+                  Mulailah perjalanan digital bisnis Anda sekarang. Kelola
+                  transaksi dan stok jadi lebih profesional dengan TitikKasir.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <Button
@@ -235,7 +235,7 @@ export default async function Home() {
                     className="h-14 px-10 text-lg bg-transparent border-primary-foreground/20 hover:bg-white/10 text-primary-foreground"
                     asChild
                   >
-                    <Link href="/auth/login">Hubungi Sales</Link>
+                    <Link href="#features">Pelajari Selengkapnya</Link>
                   </Button>
                 </div>
               </div>

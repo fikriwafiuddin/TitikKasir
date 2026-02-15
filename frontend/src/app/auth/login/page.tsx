@@ -116,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 pt-8 border-t border-white/10 text-sm text-primary-foreground/60">
-          © 2026 TitikKasir Software House. Terpercaya bagi ribuan merchant.
+          © 2026 TitikKasir Software House. Solusi Kasir Digital Modern.
         </div>
       </div>
     </div>
