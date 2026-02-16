@@ -18,6 +18,7 @@ import AppPagination from "@/components/AppPagination"
 import { useProducts } from "@/services/hooks/useProduct"
 import { useCategories } from "@/services/hooks/useCategory"
 import { useDebounce } from "@/hooks/useDebounce"
+import ErrorState from "@/components/ErrorState"
 
 export default function POSPage() {
   const [page, setPage] = useState(1)
@@ -25,11 +26,15 @@ export default function POSPage() {
   const [categoryId, setCategoryId] = useState<string>("all")
   const debouncedSearch = useDebounce(searchQuery, 500)
 
-  const { data: categoriesData } = useCategories({
+  const {
+    data: categoriesData,
+    isError: isCategoriesError,
+    refetch: refetchCategories,
+  } = useCategories({
     limit: 100,
   })
 
-  const { data, isLoading } = useProducts({
+  const { data, isLoading, isError, refetch } = useProducts({
     page,
     limit: 15,
     name: debouncedSearch as string,
@@ -88,17 +93,31 @@ export default function POSPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-24">
-          {isLoading
-            ? Array.from({ length: 15 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-64 bg-muted animate-pulse rounded-2xl"
-                />
-              ))
-            : products.map((product) => (
+          {isLoading ? (
+            Array.from({ length: 15 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-64 bg-muted animate-pulse rounded-2xl"
+              />
+            ))
+          ) : isError || isCategoriesError ? (
+            <div className="col-span-full">
+              <ErrorState
+                message="Gagal memuat daftar produk atau kategori."
+                onRetry={() => {
+                  refetch()
+                  refetchCategories()
+                }}
+              />
+            </div>
+          ) : (
+            <>
+              {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-          {!isLoading && products.length === 0 && <EmptyProducts />}
+              {products.length === 0 && <EmptyProducts />}
+            </>
+          )}
         </div>
 
         {meta && meta.total_pages > 1 && (

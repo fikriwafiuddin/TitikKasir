@@ -16,6 +16,7 @@ import SalesChart from "./_components/SalesChart"
 
 import { useReport } from "@/services/hooks/useReport"
 import { ReportsSkeleton } from "./_components/ReportsSkeleton"
+import ErrorState from "@/components/ErrorState"
 
 export default function ReportsPage() {
   const searchParams = useSearchParams()
@@ -27,7 +28,7 @@ export default function ReportsPage() {
     (new Date().getMonth() + 1).toString().padStart(2, "0")
   const year = searchParams.get("year") || new Date().getFullYear().toString()
 
-  const { data, isLoading } = useReport(month, year)
+  const { data, isLoading, isError, refetch } = useReport(month, year)
 
   const handleMonthChange = (value: string) => {
     router.push(`${pathname}?month=${value}&year=${year}`)
@@ -81,7 +82,9 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {isLoading ? (
+      {isError ? (
+        <ErrorState message="Gagal memuat laporan bisnis." onRetry={refetch} />
+      ) : isLoading ? (
         <ReportsSkeleton />
       ) : (
         <>

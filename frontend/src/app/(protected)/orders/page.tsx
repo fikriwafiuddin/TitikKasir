@@ -6,6 +6,7 @@ import AppPagination from "@/components/AppPagination"
 import FiltersSection from "./_components/FiltersSection"
 import { useOrders } from "@/services/hooks/useOrder"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import ErrorState from "@/components/ErrorState"
 
 export default function OrdersPage() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function OrdersPage() {
   const month = searchParams.get("month") || undefined
   const year = searchParams.get("year") || undefined
 
-  const { data, isLoading } = useOrders({
+  const { data, isLoading, isError, refetch } = useOrders({
     page,
     limit: 10,
     search,
@@ -55,7 +56,11 @@ export default function OrdersPage() {
 
       <FiltersSection />
 
-      <DataTable columns={columns} data={orders} isLoading={isLoading} />
+      {isError ? (
+        <ErrorState message="Gagal memuat riwayat pesanan." onRetry={refetch} />
+      ) : (
+        <DataTable columns={columns} data={orders} isLoading={isLoading} />
+      )}
 
       {meta && meta.total_pages > 1 && (
         <AppPagination

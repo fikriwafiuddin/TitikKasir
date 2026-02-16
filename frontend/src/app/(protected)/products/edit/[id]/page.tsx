@@ -4,8 +4,10 @@ import { ProductForm } from "@/components/product/ProductForm"
 import { Button } from "@/components/ui/button"
 import { ArrowLeftIcon } from "lucide-react"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useRouter, notFound } from "next/navigation"
 import { useProductDetail } from "@/services/hooks/useProduct"
+import { AxiosError } from "axios"
+import ErrorState from "@/components/ErrorState"
 import { ProductFormSkeleton } from "@/components/skeleton/ProductFormSkeleton"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -14,7 +16,29 @@ export default function EditProductPage() {
   const params = useParams()
   const id = parseInt(params.id as string)
 
-  const { data: product, isLoading } = useProductDetail(id)
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useProductDetail(id)
+
+  if (isError) {
+    const axiosError = error as AxiosError
+    if (axiosError.response?.status === 404) {
+      return notFound()
+    }
+    return (
+      <div className="py-20">
+        <ErrorState
+          title="Gagal Memuat Produk"
+          message="Terjadi kesalahan saat mengambil detail produk. Pastikan ID produk benar atau coba lagi nanti."
+          onRetry={refetch}
+        />
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
@@ -31,8 +55,8 @@ export default function EditProductPage() {
     )
   }
 
-  if (!product) {
-    return <div>Produk tidak ditemukan.</div>
+  if (!isLoading && !product) {
+    return notFound()
   }
 
   return (

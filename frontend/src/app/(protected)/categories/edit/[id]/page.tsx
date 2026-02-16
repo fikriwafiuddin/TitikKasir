@@ -7,7 +7,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 import { useCategory } from "@/services/hooks/useCategory"
-import { useParams } from "next/navigation"
+import { useParams, notFound } from "next/navigation"
+import { AxiosError } from "axios"
+import ErrorState from "@/components/ErrorState"
 import { CategoryFormSkeleton } from "@/components/skeleton/CategoryFormSkeleton"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -16,7 +18,23 @@ function EditCategoryPage() {
   const params = useParams()
   const id = Number(params.id)
 
-  const { data: category, isLoading } = useCategory(id)
+  const { data: category, isLoading, isError, error, refetch } = useCategory(id)
+
+  if (isError) {
+    const axiosError = error as AxiosError
+    if (axiosError.response?.status === 404) {
+      return notFound()
+    }
+    return (
+      <div className="py-20">
+        <ErrorState
+          title="Gagal Memuat Kategori"
+          message="Terjadi kesalahan saat mengambil detail kategori. Pastikan ID kategori benar atau coba lagi nanti."
+          onRetry={refetch}
+        />
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
@@ -33,15 +51,8 @@ function EditCategoryPage() {
     )
   }
 
-  if (!category) {
-    return (
-      <div className="flex h-64 flex-col items-center justify-center border rounded-xl bg-card gap-4">
-        <p className="text-muted-foreground">Kategori tidak ditemukan.</p>
-        <Button asChild variant="outline">
-          <Link href="/categories">Kembali ke Daftar</Link>
-        </Button>
-      </div>
-    )
+  if (!isLoading && !category) {
+    return notFound()
   }
 
   return (

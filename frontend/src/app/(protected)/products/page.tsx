@@ -19,6 +19,7 @@ import Link from "next/link"
 import { useProducts } from "@/services/hooks/useProduct"
 import { useCategories } from "@/services/hooks/useCategory"
 import { useDebounce } from "@/hooks/useDebounce"
+import ErrorState from "@/components/ErrorState"
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1)
@@ -30,7 +31,7 @@ export default function ProductsPage() {
     limit: 100,
   })
 
-  const { data, isLoading } = useProducts({
+  const { data, isLoading, isError, refetch } = useProducts({
     page,
     limit: 10,
     name: debouncedSearch as string,
@@ -94,7 +95,11 @@ export default function ProductsPage() {
         </Select>
       </div>
 
-      <DataTable columns={columns} data={products} isLoading={isLoading} />
+      {isError ? (
+        <ErrorState message="Gagal memuat daftar produk." onRetry={refetch} />
+      ) : (
+        <DataTable columns={columns} data={products} isLoading={isLoading} />
+      )}
 
       {meta && (
         <AppPagination

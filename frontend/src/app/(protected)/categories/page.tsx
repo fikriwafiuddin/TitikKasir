@@ -10,13 +10,14 @@ import Link from "next/link"
 import AppPagination from "@/components/AppPagination"
 import { useCategories } from "@/services/hooks/useCategory"
 import { useDebounce } from "@/hooks/useDebounce"
+import ErrorState from "@/components/ErrorState"
 
 export default function CategoriesPage() {
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const debouncedSearch = useDebounce(searchQuery, 500)
 
-  const { data, isLoading } = useCategories({
+  const { data, isLoading, isError, refetch } = useCategories({
     page,
     limit: 10,
     name: debouncedSearch as string,
@@ -56,7 +57,9 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {isLoading ? (
+      {isError ? (
+        <ErrorState message="Gagal memuat daftar kategori." onRetry={refetch} />
+      ) : isLoading ? (
         <div className="h-64 flex items-center justify-center border rounded-xl bg-card">
           <div className="animate-pulse text-muted-foreground">
             Memuat data...
