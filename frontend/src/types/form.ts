@@ -11,5 +11,7 @@ export type FormCreateCategory = z.infer<typeof categoryValidation.create>
 
 export type FormLogin = z.infer<typeof authValidation.login>
 export type FormRegister = z.infer<typeof authValidation.register>
+export type FormForgotPassword = z.infer<typeof authValidation.forgotPassword>
+export type FormResetPassword = z.infer<typeof authValidation.resetPassword>
 
 export type FormSettings = z.infer<typeof settingsValidation>

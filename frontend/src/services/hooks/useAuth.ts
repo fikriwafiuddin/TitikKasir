@@ -38,7 +38,43 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { AuthError, AuthResponse } from "@supabase/supabase-js"
 import authApi from "../api/authApi"
-import { FormLogin, FormRegister } from "@/types/form"
+import {
+  FormForgotPassword,
+  FormLogin,
+  FormRegister,
+  FormResetPassword,
+} from "@/types/form"
+
+export function useResetPassword() {
+  return useMutation<void, AuthError, FormForgotPassword>({
+    mutationFn: async (data) => {
+      return await authApi.resetPasswordForEmail(data.email)
+    },
+    onSuccess: () => {
+      toast.success("Link reset password telah dikirim ke email Anda.")
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal mengirim link reset password.")
+    },
+  })
+}
+
+export function useUpdatePassword() {
+  const router = useRouter()
+
+  return useMutation<void, AuthError, FormResetPassword>({
+    mutationFn: async (data) => {
+      return await authApi.updatePassword(data.password)
+    },
+    onSuccess: () => {
+      toast.success("Password berhasil diubah, silakan login kembali.")
+      router.push("/auth/login")
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal mengubah password.")
+    },
+  })
+}
 
 export function useLogin() {
   const router = useRouter()
