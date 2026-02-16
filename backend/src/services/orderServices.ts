@@ -3,6 +3,7 @@ import { ErrorResponse } from "../utils/response.js"
 import prisma from "../lib/prisma.js"
 
 const create = async (userId: string, data: any) => {
+  console.log(userId, data)
   const result = await prisma.$transaction(async (tx) => {
     // 1. Get user for latest_order_id
     const user = await tx.user.findUnique({
@@ -22,6 +23,7 @@ const create = async (userId: string, data: any) => {
       nextNumber = lastNumber + 1
     }
     const nextOrderId = `TR-${nextNumber.toString().padStart(6, "0")}`
+    console.log(nextOrderId)
 
     // 3. Create Order and items
     const order = await tx.order.create({
@@ -263,7 +265,7 @@ const updateStatus = async (
     }
 
     const updatedOrder = await tx.order.update({
-      where: { order_id: orderId },
+      where: { id: order.id },
       data: { status },
       include: {
         order_items: true,

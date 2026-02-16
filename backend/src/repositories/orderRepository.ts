@@ -53,9 +53,9 @@ const findByOrderId = async (userId: string, orderId: string) => {
   })
 }
 
-const update = async (orderId: string, data: any) => {
+const update = async (id: number, data: any) => {
   return await prisma.order.update({
-    where: { order_id: orderId },
+    where: { id },
     data,
     include: {
       order_items: true,
