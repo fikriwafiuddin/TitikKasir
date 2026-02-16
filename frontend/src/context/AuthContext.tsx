@@ -48,8 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Handle different auth events
       switch (event) {
         case "SIGNED_IN":
-          router.push("/pos")
-          router.refresh()
+          // router.push("/pos")
+          // router.refresh()
           break
 
         case "SIGNED_OUT":
