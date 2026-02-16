@@ -20,6 +20,8 @@ import { useCategories } from "@/services/hooks/useCategory"
 import { useCreateProduct, useUpdateProduct } from "@/services/hooks/useProduct"
 import { FormCreateProduct, FormUpdateProduct } from "@/types/form"
 import { Spinner } from "../ui/spinner"
+import { AlertCircle } from "lucide-react"
+import Link from "next/link"
 
 interface ProductFormProps {
   product?: Product
@@ -138,6 +140,29 @@ export function ProductForm({
                   <FieldLabel htmlFor="category_id">
                     Kategori {isLoading && <Spinner />}
                   </FieldLabel>
+
+                  {!isLoading && categories.length === 0 && (
+                    <div className="flex items-start gap-4 p-4 mb-4 bg-amber-50/50 dark:bg-amber-950/20 backdrop-blur-sm rounded-2xl border border-amber-200/50 dark:border-amber-900/30 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-amber-100/80 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 shadow-inner">
+                        <AlertCircle size={20} />
+                      </div>
+                      <div className="flex-1 pt-0.5">
+                        <p className="font-bold text-amber-900 dark:text-amber-200 leading-tight">
+                          Kategori Belum Tersedia
+                        </p>
+                        <p className="text-amber-700/90 dark:text-amber-400/90 text-sm mt-1">
+                          Anda harus membuat setidaknya satu kategori sebelum
+                          dapat menambahkan produk.{" "}
+                          <Link
+                            href="/categories/add"
+                            className="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-300 hover:text-amber-950 dark:hover:text-amber-100 underline underline-offset-4 transition-all"
+                          >
+                            Tambah kategori baru
+                          </Link>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   <Select
                     onValueChange={(val) => field.onChange(parseInt(val))}
                     value={field.value?.toString()}
@@ -146,7 +171,7 @@ export function ProductForm({
                       id="category_id"
                       aria-invalid={fieldState.invalid}
                       className="w-full rounded-xl h-10"
-                      disabled={isLoading}
+                      disabled={isLoading || categories.length === 0}
                     >
                       <SelectValue placeholder="Pilih kategori" />
                     </SelectTrigger>

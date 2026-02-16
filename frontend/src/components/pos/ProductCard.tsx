@@ -49,7 +49,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
       </CardContent>
       <CardFooter className="p-3">
-        <Button size="sm" className="w-full gap-2 text-xs sm:text-base">
+        <Button
+          disabled={product.stock <= 0}
+          size="sm"
+          className="w-full gap-2 text-xs sm:text-base"
+        >
           <Plus />
           Tambah
         </Button>
