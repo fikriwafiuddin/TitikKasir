@@ -2,6 +2,7 @@ import productRepository from "../repositories/productRepository.js"
 import categoryRepository from "../repositories/categoryRepository.js"
 import { generateNextProductSku } from "../helpers/productHelper.js"
 import { ErrorResponse } from "../utils/response.js"
+import prisma from "../lib/prisma.js"
 import cloudinary from "../lib/cloudinary.js"
 import { UploadApiOptions } from "cloudinary"
 
@@ -59,6 +60,11 @@ const create = async (
 ) => {
   const { name, category_id } = data
 
+  const category = await categoryRepository.findById(userId, category_id)
+  if (!category) {
+    throw new ErrorResponse("Category not found or inactive", 404)
+  }
+
   const productExists = await productRepository.findByName(userId, name)
   if (productExists) {
     throw new ErrorResponse("Product name already exists", 400)
@@ -78,22 +84,32 @@ const create = async (
     }
   }
 
-  const product = await productRepository.create({
-    user_id: userId,
-    category_id,
-    sku: nextSku,
-    name,
-    stock: data.stock,
-    price: data.price,
-    image: imageUrl,
-  })
+  return await prisma.$transaction(async (tx) => {
+    const product = await tx.product.create({
+      data: {
+        user_id: userId,
+        category_id,
+        sku: nextSku,
+        name,
+        stock: data.stock,
+        price: data.price,
+        image: imageUrl,
+      },
+    })
 
-  // Update latest_sku in category
-  await categoryRepository.update(category_id, {
-    latest_sku: nextSku,
-  })
+    // Update latest_sku and increment total_items in category
+    await tx.category.update({
+      where: { id: category_id },
+      data: {
+        latest_sku: nextSku,
+        total_items: {
+          increment: 1,
+        },
+      },
+    })
 
-  return product
+    return product
+  })
 }
 
 const update = async (
@@ -136,29 +152,85 @@ const update = async (
     }
   }
 
-  return await productRepository.update(id, {
+  const updateData = {
     ...data,
     image: imageUrl,
-  })
+  }
+
+  // Handle category change (update total_items)
+  if (data.category_id && data.category_id !== product.category_id) {
+    const category = await categoryRepository.findById(userId, data.category_id)
+    if (!category) {
+      throw new ErrorResponse("Category not found or inactive", 404)
+    }
+
+    return await prisma.$transaction(async (tx) => {
+      // Decrement old category
+      await tx.category.update({
+        where: { id: product.category_id },
+        data: { total_items: { decrement: 1 } },
+      })
+
+      // Increment new category
+      await tx.category.update({
+        where: { id: data.category_id },
+        data: { total_items: { increment: 1 } },
+      })
+
+      return await productRepository.update(id, updateData)
+    })
+  }
+
+  return await productRepository.update(id, updateData)
 }
 
 const remove = async (userId: string, id: number) => {
-  const product = await productRepository.findById(userId, id)
+  const product = await prisma.product.findFirst({
+    where: { id, user_id: userId },
+  })
   if (!product) {
     throw new ErrorResponse("Product not found", 404)
   }
 
-  // Delete image from cloudinary
-  if (product.image) {
-    const publicId = product.image.split("/").pop()?.split(".")[0]
-    if (publicId) {
-      await cloudinary.uploader.destroy(
-        `titik-kasir/products/${userId}/${publicId}`,
-      )
-    }
-  }
+  // Check if product is used in any order items
+  const orderItemExist = await prisma.orderItem.findFirst({
+    where: { product_id: id },
+  })
 
-  return await productRepository.deleteById(id)
+  return await prisma.$transaction(async (tx) => {
+    if (orderItemExist) {
+      // Soft delete
+      await tx.product.update({
+        where: { id },
+        data: { is_active: false },
+      })
+    } else {
+      // Hard delete: Delete image from cloudinary first
+      if (product.image) {
+        const publicId = product.image.split("/").pop()?.split(".")[0]
+        if (publicId) {
+          await cloudinary.uploader.destroy(
+            `titik-kasir/products/${userId}/${publicId}`,
+          )
+        }
+      }
+      await tx.product.delete({
+        where: { id },
+      })
+    }
+
+    // Decrement category total_items
+    await tx.category.update({
+      where: { id: product.category_id },
+      data: {
+        total_items: {
+          decrement: 1,
+        },
+      },
+    })
+
+    return product
+  })
 }
 
 const detail = async (userId: string, id: number) => {

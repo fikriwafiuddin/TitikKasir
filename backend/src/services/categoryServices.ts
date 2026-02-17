@@ -2,6 +2,7 @@ import categoryRepository from "../repositories/categoryRepository.js"
 import { generateUniqueCategorySkuPrefix } from "../helpers/categoryHelper.js"
 import { FormCreateCategory } from "../types/form.js"
 import { ErrorResponse } from "../utils/response.js"
+import prisma from "../lib/prisma.js"
 
 const getAll = async (
   userId: string,
@@ -67,9 +68,25 @@ const update = async (userId: string, id: number, data: FormCreateCategory) => {
 }
 
 const remove = async (userId: string, id: number) => {
-  const category = await categoryRepository.findById(userId, id)
+  const category = await prisma.category.findFirst({
+    where: { id, user_id: userId },
+  })
   if (!category) {
     throw new ErrorResponse("Category not found", 404)
+  }
+
+  if (category.total_items > 0) {
+    throw new ErrorResponse("Category is not empty", 400)
+  }
+
+  // Check if there are ANY products (including soft-deleted) in this category
+  const productCount = await prisma.product.count({
+    where: { category_id: id },
+  })
+
+  if (productCount > 0) {
+    // Soft delete category
+    return await categoryRepository.update(id, { is_active: false })
   }
 
   return await categoryRepository.deleteById(id)

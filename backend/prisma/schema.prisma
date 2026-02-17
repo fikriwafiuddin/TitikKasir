@@ -30,6 +30,7 @@ model Category {
   total_items Int       @default(0)
   sku_prefix  String    @db.VarChar(5)
   latest_sku  String    @db.VarChar(10)
+  is_active   Boolean   @default(true)
   products    Product[]
 
   @@map("categories")
@@ -44,6 +45,7 @@ model Product {
   stock       Int
   price       Int
   image       String?     @db.Text
+  is_active   Boolean     @default(true)
   category    Category    @relation(fields: [category_id], references: [id])
   order_items OrderItem[]
 
@@ -68,6 +70,7 @@ model OrderItem {
   product_id   Int
   order_id     Int
   product_name String  @db.VarChar(25)
+  product_sku  String  @db.VarChar(10)
   unit_price   Int
   sub_total    Int
   quantity     Int

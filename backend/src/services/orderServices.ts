@@ -1,9 +1,9 @@
 import orderRepository from "../repositories/orderRepository.js"
 import { ErrorResponse } from "../utils/response.js"
 import prisma from "../lib/prisma.js"
+import { Product } from "@prisma/client"
 
 const create = async (userId: string, data: any) => {
-  console.log(userId, data)
   const result = await prisma.$transaction(async (tx) => {
     // 1. Get user for latest_order_id
     const user = await tx.user.findUnique({
@@ -14,40 +14,9 @@ const create = async (userId: string, data: any) => {
       throw new ErrorResponse("User not found", 404)
     }
 
-    // 2. Generate Order ID
-    const latestOrderId = user.latest_order_id
-    let nextNumber = 1
-    if (latestOrderId) {
-      const lastNumberMatch = latestOrderId.match(/-(\d+)$/)
-      const lastNumber = lastNumberMatch ? parseInt(lastNumberMatch[1], 10) : 0
-      nextNumber = lastNumber + 1
-    }
-    const nextOrderId = `TR-${nextNumber.toString().padStart(6, "0")}`
-    console.log(nextOrderId)
+    let totalAmount = 0
+    const items: (Product & { quantity: number })[] = []
 
-    // 3. Create Order and items
-    const order = await tx.order.create({
-      data: {
-        order_id: nextOrderId,
-        user_id: userId,
-        total_amount: data.total_amount,
-        order_items: {
-          create: data.items.map((item: any) => ({
-            user_id: userId,
-            product_id: item.product_id,
-            product_name: item.product_name,
-            unit_price: item.unit_price,
-            sub_total: item.sub_total,
-            quantity: item.quantity,
-          })),
-        },
-      },
-      include: {
-        order_items: true,
-      },
-    })
-
-    // 4. Update product stock
     for (const item of data.items) {
       const product = await tx.product.findFirst({
         where: {
@@ -75,7 +44,43 @@ const create = async (userId: string, data: any) => {
           },
         },
       })
+
+      totalAmount += item.quantity * product.price
+      items.push({ ...product, quantity: item.quantity })
     }
+
+    // 2. Generate Order ID
+    const latestOrderId = user.latest_order_id
+    let nextNumber = 1
+    if (latestOrderId) {
+      const lastNumberMatch = latestOrderId.match(/-(\d+)$/)
+      const lastNumber = lastNumberMatch ? parseInt(lastNumberMatch[1], 10) : 0
+      nextNumber = lastNumber + 1
+    }
+    const nextOrderId = `TR-${nextNumber.toString().padStart(6, "0")}`
+
+    // 3. Create Order and items
+    const order = await tx.order.create({
+      data: {
+        order_id: nextOrderId,
+        user_id: userId,
+        total_amount: totalAmount,
+        order_items: {
+          create: items.map((item) => ({
+            user_id: userId,
+            product_id: item.id,
+            product_name: item.name,
+            product_sku: item.sku,
+            unit_price: item.price,
+            sub_total: item.price * item.quantity,
+            quantity: item.quantity,
+          })),
+        },
+      },
+      include: {
+        order_items: true,
+      },
+    })
 
     // 5. Update user latest_order_id
     await tx.user.update({

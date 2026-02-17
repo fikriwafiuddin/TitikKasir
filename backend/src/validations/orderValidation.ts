@@ -6,10 +6,7 @@ const create = z.object({
     .array(
       z.object({
         product_id: z.number().int().positive(),
-        product_name: z.string(),
-        unit_price: z.number().int().positive(),
         quantity: z.number().int().positive(),
-        sub_total: z.number().int().positive(),
       }),
     )
     .min(1),

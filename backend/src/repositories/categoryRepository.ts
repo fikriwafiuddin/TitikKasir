@@ -2,24 +2,19 @@ import prisma from "../lib/prisma.js"
 
 const findAll = async (where: any, skip: number, take: number) => {
   return await prisma.category.findMany({
-    where,
+    where: { ...where, is_active: true },
     skip,
     take,
     orderBy: {
       id: "desc",
     },
-    include: {
-      _count: {
-        select: {
-          products: true,
-        },
-      },
-    },
   })
 }
 
 const count = async (where: any) => {
-  return await prisma.category.count({ where })
+  return await prisma.category.count({
+    where: { ...where, is_active: true },
+  })
 }
 
 const findById = async (userId: string, id: number) => {
@@ -27,6 +22,7 @@ const findById = async (userId: string, id: number) => {
     where: {
       user_id: userId,
       id,
+      is_active: true,
     },
   })
 }
@@ -36,6 +32,7 @@ const findByName = async (userId: string, name: string) => {
     where: {
       user_id: userId,
       name,
+      is_active: true,
     },
   })
 }
