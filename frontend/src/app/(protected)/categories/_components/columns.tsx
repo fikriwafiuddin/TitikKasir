@@ -13,11 +13,11 @@ const columns: ColumnDef<Category>[] = [
   },
   {
     header: () => <div className="text-right">Total Produk</div>,
-    accessorKey: "_count.products",
+    accessorKey: "total_items",
     cell: ({ row }) => (
       <div className="text-right">
         <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
-          {row.original._count?.products || 0}
+          {row.original.total_items || 0}
         </span>
       </div>
     ),

@@ -7,10 +7,7 @@ export interface User {
 export interface Category {
   id: number
   name: string
-  totalProducts?: number
-  _count?: {
-    products: number
-  }
+  total_items: number
 }
 
 export interface Product {
